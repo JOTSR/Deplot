@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./logo.png" type="image/png">
+    <!-- <link rel="stylesheet" href="style.css"> -->
+</head>
+<body>
+    <style>
+        body {
+            background-color: red;
+        }
+    </style>
+    <div id="plot-div"></div>
+    <!-- <script src="../dist/client/app.js" type="module"></script> -->
+    <script type="module">
+        import { event, invoke } from 'https://cdn.jsdelivr.net/npm/@tauri-apps/api@1.0.0-beta.8/index.js';
+
+        invoke('init_listener').then(() => {
+            alert('invoke')
+            event.listen('fromDeno', ({ payload }) => {
+                alert(payload)
+                eval(payload)
+            })
+        })  
+    </script>
+</body>
+</html>

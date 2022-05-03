@@ -1,0 +1,26 @@
+scripts:
+  format:
+    cmd: deno fmt --options-single-quote --unstable
+  
+  lint:
+    cmd: deno lint --unstable
+
+  update:
+    cmd: deno run --allow-net='x.nest.land,cdn.deno.land,api.deno.land,raw.githubusercontent.com,github.com,api.github.com,cdn.skypack.dev' --allow-read='.' --allow-write='deps.ts' https://deno.land/x/dmm@v1.3.2/mod.ts update
+  
+  check:
+    cmd:
+      - vr run lint
+      - vr run format
+      - deno run --allow-net='x.nest.land,cdn.deno.land,api.deno.land,raw.githubusercontent.com,github.com,api.github.com,cdn.skypack.dev' --allow-read='.' --allow-write='deps.ts' https://deno.land/x/dmm@v1.3.2/mod.ts check
+    gitHook: pre-commit
+
+  examples:
+    cmd:
+      - denu run --allow-read="." --allow-env --allow-ffi --unstable ./examples/chartjs.ts
+      - denu run --allow-read="." --allow-env --allow-ffi --unstable ./examples/plotly.ts
+      - denu run --allow-read="." --allow-env --allow-ffi --unstable ./examples/gcharts.ts
+
+  test:
+    cmd:
+      - deno test
