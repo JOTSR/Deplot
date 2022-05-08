@@ -4,27 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="./logo.png" type="image/png">
-    <!-- <link rel="stylesheet" href="style.css"> -->
+    <link rel="icon" type="image/png">
+    <title>Deplot</title>
 </head>
 <body>
-    <style>
-        body {
-            background-color: red;
-        }
-    </style>
-    <div id="plot-div"></div>
-    <!-- <script src="../dist/client/app.js" type="module"></script> -->
-    <script type="module">
-        import { event, invoke } from 'https://cdn.jsdelivr.net/npm/@tauri-apps/api@1.0.0-beta.8/index.js';
-
-        invoke('init_listener').then(() => {
-            alert('invoke')
-            event.listen('fromDeno', ({ payload }) => {
-                alert(payload)
-                eval(payload)
-            })
-        })  
-    </script>
+    <span id="deno_args" hidden></span>
+    <div id="plot_container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%">
+        <canvas id="plot"></canvas>
+    </div>
+    <script type="module" defer></script>
 </body>
 </html>

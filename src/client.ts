@@ -1,91 +1,67 @@
-import { Webview } from 'https://deno.land/x/webview@0.7.0-pre.1/mod.ts';
-// import { WebSocketMessage } from './types.ts'
+import { ChartJs } from '../deps.ts';
+//import * as Plotly from '../deps.ts';
+//import * as GCharts from 'cdn?'
+import { parseMessage } from './helpers.ts';
 
-// const indexPath = `file://${Deno.cwd()}/public/index.html
+const {id, engine, port} = document.querySelector<HTMLElement>('#deno_args')!.dataset as {id: string, engine: string, port: string}
 
-const [id, engine, port, width, height] = Deno.args;
+const canvas = document.querySelector<HTMLCanvasElement>('#plot')!
+const ctx = canvas!.getContext('2d')!;
 
-const webview = new Webview(Number(width), Number(height));
+const ws = new WebSocket(`ws://localhost:${port}`)
 
-const html = /*html*/ `
-    <!DOCTYPE html>
-    <html>
-        <head>
-            <title>deplot</title>
-        </head>
-        <body>
-            <div id="plot_container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%">
-                <canvas id="plot"></canvas>
-            </div>
-        </body>
-        <script type="module">
-            import * as ChartJs from 'https://cdn.skypack.dev/chart.js@3.7'
-            //import * as Plotly from 'https://cdn.skypack.dev/plotly.js@2.11'
-            //import * as GCharts from 'cdn?'
-            
-            const canvas = document.getElementById('plot')
-            const ctx = canvas.getContext('2d');
-            
-            const ws = new WebSocket('ws://localhost:${port}')
-            
-            ws.onopen = () => {
-                const response = {id: '${id}', payload: {event: 'success'}, result: '${id} opened'}
-                ws.send(JSON.stringify(response))
-            }
-            
-            ws.onerror = (e) => {
-                const response = {id: '${id}', payload: {event: 'error'}, result: String(e)}
-                ws.send(JSON.stringify(response))
-            }
-            
-            ws.onmessage = ({data}) => {
-                const {id, payload} = JSON.parse(data)
-                if (id === '${id}') {
-                    document.querySelector('title').innerText = payload.config.title ?? 'deplot'
+ws.onopen = () => {
+    const response = {id, payload: {event: 'success'}, result: `${id} opened`}
+    ws.send(JSON.stringify(response))
+}
 
-                    const canvas = document.getElementById('plot')
-                    canvas.setAttribute('width', payload.config.size[0])
-                    canvas.setAttribute('height', payload.config.size[1])
-                    globalThis.resizeTo(...payload.config.size)
+ws.onerror = (e) => {
+    const response = {id, payload: {event: 'error'}, result: String(e)}
+    ws.send(JSON.stringify(response))
+}
 
-                    if ('${engine}' === 'ChartJs') {
-                        const registerables = []
-                        for (const e of ChartJs.registerables) {
-                            for (const k in e) {
-                                registerables.push(ChartJs[k])
-                            }
-                        }
-                        ChartJs.Chart.register(...registerables)
+ws.onmessage = ({data}) => {
+    const {id: _id, payload} = parseMessage(data)
+    
+    if (_id === id && 'config' in payload) {
+        document.querySelector('title')!.innerText = payload.config.title ?? 'deplot'
 
-                        const plot = new ChartJs.Chart(ctx, payload.datas)
-                        return
-                    }
-                    if ('${engine}' === 'Plotly') {
-                        const { data, layout, options } =  payload.datas
-                        Plotly.newPlot('plot', data, layout, options)
-                        return
-                    }
-                    if ('${engine}' === 'GCharts') {
-                        //const plot
-                        return
-                    }
+        canvas.setAttribute('width', String(payload.config.size[0]))
+        canvas.setAttribute('height', String(payload.config.size[1]))
+        globalThis.resizeTo(...payload.config.size)
+
+        if (engine === 'ChartJs') {
+            const registerables = []
+            for (const _registerables of ChartJs.registerables) {
+                for (const key in _registerables) {
+                    //@ts-ignore intern ChartJs type
+                    registerables.push(ChartJs[key])
                 }
             }
+            ChartJs.Chart.register(...registerables)
 
-            addEventListener('resize', () => {
-                if ('${engine}' === 'ChartJs') {
-                    for (const id in ChartJs.Chart.instances) {
-                        Chart.instances[id].resize()
-                    }
-                    return
-                }
-                canvas.setAttribute('width', window.innerWidth)
-                canvas.setAttribute('height', window.innerHeight)
-            })
-        </script>
-    </html>
-`;
+            new ChartJs.Chart(ctx, payload.datas)
+            return
+        }
+        if (engine === 'Plotly') {
+            // const { data, layout, options } =  payload.datas
+            // Plotly.newPlot('plot', data, layout, options)
+            // return
+        }
+        if (engine === 'GCharts') {
+            //const plot
+            return
+        }
+    }
+}
 
-webview.navigate(`data:text/html,${encodeURIComponent(html)}`);
-
-webview.run();
+addEventListener('resize', () => {
+    if (engine === 'ChartJs') {
+        for (const id in ChartJs.Chart.instances) {
+            ChartJs.Chart.instances[id].resize()
+        }
+        return
+    }
+    canvas.setAttribute('width', String(window.innerWidth))
+    canvas.setAttribute('height', String(window.innerHeight))
+})

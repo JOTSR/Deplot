@@ -5,8 +5,12 @@ import {
   DeplotOptions,
   Plot,
   PlotEngine,
-  WebSocketMessage,
 } from './types.ts';
+import {
+    stringifyMessage,
+    parseMessage,
+    copyObj,
+} from './helpers.ts';
 
 export class Deplot {
   #plotEngine: PlotEngine;
@@ -64,7 +68,7 @@ export class Deplot {
         '--allow-read --allow-write',
         '--allow-env=PLUGIN_URL,DENO_DIR,LOCALAPPDATA',
         '--allow-ffi',
-        `${join(Deno.cwd(), '/src/client.ts')}`,
+        `${join(Deno.cwd(), '/src/server.ts')}`,
         `${windowId} ${this.#plotEngine} ${String(port)}`,
         `${config.size.join(' ')}`,
       ].join(' ');
@@ -141,16 +145,4 @@ export class Deplot {
       throw new Error('Not implemented');
     });
   }
-}
-
-function copyObj<T>(obj: T): T {
-  return JSON.parse(JSON.stringify(obj));
-}
-
-function parseMessage(message: string) {
-  return JSON.parse(message) as WebSocketMessage;
-}
-
-function stringifyMessage(message: Omit<WebSocketMessage, 'result'>) {
-  return JSON.stringify(message);
 }
