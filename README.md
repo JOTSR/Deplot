@@ -5,18 +5,19 @@
 
 # Deplot
 
-Simple and complete Plot gui module for [Deno](https://deno.land) local scripts to provide a
-helper for science computing.
+Simple and complete Plot gui module for [Deno](https://deno.land) local scripts
+to provide a helper for science computing.
 
 [![Tags](https://img.shields.io/github/v/release/JOTSR/Deplot)](https://github.com/JOTSR/Deplot/releases)
 [![vr scripts](https://badges.velociraptor.run/flat.svg)](https://velociraptor.run)
 [![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/deno.land/x/deplot/mod.ts)
+
 <!-- [![CI Status](https://img.shields.io/github/workflow/status/JOTSR/Deplot/check)](https://github.com/JOTSR/Deplot/actions) -->
 
 ## Dependencies
 
-Use [Webview](https://deno.land/x/webview@0.7.0-pre.1) for window managing and plots
-libraries for tracing.
+Use [Webview](https://deno.land/x/webview@0.7.0-pre.1) for window managing and
+plots libraries for tracing.
 
 ## Usage
 
@@ -38,7 +39,8 @@ deno run --allow-read --allow-write="." --allow-net="0.0.0.0,127.0.0.1,localhost
 ```
 deno run --allow-read --allow-write="." --allow-net="0.0.0.0,127.0.0.1,localhost" --allow-run --allow-env --allow-ffi --unstable ./examples/chartjs.ts
 ```
-<!-- 
+
+<!--
 [Google Charts](https://developers.google.com/chart/interactive/docs)
 
 ```
