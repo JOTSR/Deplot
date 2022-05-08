@@ -1,16 +1,19 @@
-import { ensureFile, join, WebSocketClient, WebSocketServer } from '../deps.ts';
 import {
-  Config,
-  Datas,
-  DeplotOptions,
-  Plot,
-  PlotEngine,
-} from './types.ts';
-import {
-    stringifyMessage,
-    parseMessage,
-    copyObj,
-} from './helpers.ts';
+  ensureFile,
+  join,
+  serve,
+  staticFiles,
+  WebSocketClient,
+  WebSocketServer,
+} from '../deps.ts';
+import { Config, Datas, DeplotOptions, Plot, PlotEngine } from './types.ts';
+import { copyObj, parseMessage, stringifyMessage } from './helpers.ts';
+
+const serveFiles = (req: Request) =>
+  staticFiles.default(`${Deno.cwd()}/public`)({
+    request: req,
+    respondWith: (r: Response) => r,
+  });
 
 export class Deplot {
   #plotEngine: PlotEngine;
@@ -29,6 +32,8 @@ export class Deplot {
   ) {
     this.#plotEngine = plotEngine;
     this.#options = { ...options };
+
+    serve((req) => serveFiles(req), { addr: `:${options.port + 1}` });
 
     const wss = new WebSocketServer(options.port);
 
