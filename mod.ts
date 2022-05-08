@@ -1,2 +1,2 @@
-export { plot } from './src/modules/deplot.ts'
-export { ChartJs } from './deps.ts'
+export * from './src/deplot.ts';
+export { ChartJs } from './deps.ts';
