@@ -1,12 +1,16 @@
-// import { ChartJs } from '../deps.ts';
-import * as ChartJs from 'https://cdn.skypack.dev/chart.js@3.7?dts';
+// import * as ChartJs from 'https://cdn.skypack.dev/chart.js@3.7?min';
+// import * as Plotly from 'https://cdn.skypack.dev/plotly.js@2.11?dts';
+// import * as Plotly from 'https://esm.sh/plotly.js@2.11';
 
-export type PlotEngine = 'ChartJs' | 'Plotly' | 'GCharts';
+type PlotEngine = 'ChartJs' | 'Plotly' | 'GCharts';
 
-export type Config = { title?: string; size: [number, number] };
-export type Datas = ChartJs.ChartConfiguration;
+type ChartJsDatas = ChartJs.ChartConfiguration
+type PlotlyDatas = {data: Plotly.Data[], layout?: Partial<Plotly.Layout>, config?: Partial<Plotly.Config>}
 
-export type WebSocketMessage = {
+type Datas = ChartJsDatas | PlotlyDatas
+type Config = { title?: string; size: [number, number] };
+
+type WebSocketMessage = {
   id: string;
   payload:
     | { datas: Datas; config: Config }
@@ -18,9 +22,6 @@ export type WebSocketMessage = {
 function parseMessage(message: string) {
   return JSON.parse(message) as WebSocketMessage;
 }
-//import * as Plotly from '../deps.ts';
-//import * as GCharts from 'cdn?'
-// import { parseMessage } from './helpers.ts';
 
 const id = new URLSearchParams(location.search).get('id')!;
 const engine = new URLSearchParams(location.search).get('engine')!;
@@ -66,13 +67,14 @@ ws.onmessage = ({ data }) => {
       }
       ChartJs.Chart.register(...registerables);
 
-      new ChartJs.Chart(ctx, payload.datas);
+      new ChartJs.Chart(ctx, payload.datas as ChartJsDatas);
       return;
     }
     if (engine === 'Plotly') {
-      // const { data, layout, options } =  payload.datas
-      // Plotly.newPlot('plot', data, layout, options)
-      // return
+      
+      const { data, layout, config } =  payload.datas as PlotlyDatas
+      Plotly.newPlot(canvas.parentElement!, data, layout, config)
+      return;
     }
     if (engine === 'GCharts') {
       //const plot
