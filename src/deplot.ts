@@ -33,6 +33,7 @@ export class Deplot {
     this.#plotEngine = plotEngine;
     this.#options = { ...options };
 
+    //@ts-ignore from example
     serve((req) => serveFiles(req), { addr: `:${options.port + 1}` });
 
     const wss = new WebSocketServer(options.port);

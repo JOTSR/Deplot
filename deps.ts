@@ -1,6 +1,7 @@
 export { serve } from 'https://deno.land/std@0.138.0/http/server.ts';
 export * as staticFiles from 'https://deno.land/x/static_files@1.1.6/mod.ts';
-export { ensureFile } from 'https://deno.land/std@0.138.0/fs/ensure_file.ts';
+export { ensureFile } from 'https://deno.land/std@0.138.0/fs/en
+sure_file.ts';
 export { join } from 'https://deno.land/std@0.138.0/path/mod.ts';
 export { datauri } from 'https://deno.land/x/datauri@v1.1.2/mod.ts';
 export { Webview } from 'https://deno.land/x/webview@0.7.0-pre.1/mod.ts';
