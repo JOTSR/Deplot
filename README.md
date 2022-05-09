@@ -23,6 +23,10 @@ plots libraries for tracing.
 
 All the modules are exposed in `mod.ts`
 
+```ts
+import { Deplot } from "https://deno.land/x/deplot";
+```
+
 [Documentation](https://doc.deno.land/https/https/deno.land/x/deplot/mod.ts)
 
 ## Examples
@@ -36,7 +40,7 @@ deno run --allow-read --allow-write="." --allow-net="0.0.0.0,127.0.0.1,localhost
 
 [Chart.js](https://www.chartjs.org/docs/3.7.0/)
 
-```
+```sh
 deno run --allow-read --allow-write="." --allow-net="0.0.0.0,127.0.0.1,localhost" --allow-run --allow-env --allow-ffi --unstable ./examples/chartjs.ts
 ```
 
