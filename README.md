@@ -34,13 +34,13 @@ import { Deplot } from 'https://deno.land/x/deplot';
 [Plotly.js](https://plotly.com/javascript/)
 
 ```sh
-deno run --allow-read --allow-write="." --allow-net="0.0.0.0,127.0.0.1,localhost" --allow-run --allow-env --allow-ffi --unstable https://deno.land/x/deplot/examples/plotly.ts
+deno run --allow-read --allow-write --allow-net --allow-run --allow-env --allow-ffi --unstable --no-check https://deno.land/x/deplot/examples/plotly.ts
 ```
 
 [Chart.js](https://www.chartjs.org/docs/3.7.0/)
 
 ```sh
-deno run --allow-read --allow-write="." --allow-net="0.0.0.0,127.0.0.1,localhost" --allow-run --allow-env --allow-ffi --unstable https://deno.land/x/deplot/examples/chartjs.ts
+deno run --allow-read --allow-write --allow-net --allow-run --allow-env --allow-ffi --unstable --no-check https://deno.land/x/deplot/examples/chartjs.ts
 ```
 
 <!--
