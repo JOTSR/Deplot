@@ -1,6 +1,5 @@
 import * as ChartJs from 'https://cdn.skypack.dev/chart.js@3.7?dts';
-// import * as Plotly from 'https://cdn.skypack.dev/plotly.js@2.11?dts';
-// import * as Plotly from 'https://esm.sh/plotly.js@2.11';
+import * as Plotly from '../vendor/Ploty/index.d.ts';
 
 type PlotEngine = 'ChartJs' | 'Plotly' | 'GCharts';
 
@@ -24,7 +23,7 @@ function parseMessage(message: string) {
 }
 
 const id = new URLSearchParams(location.search).get('id')!;
-const engine = new URLSearchParams(location.search).get('engine')!;
+const engine = new URLSearchParams(location.search).get('engine')! as PlotEngine;
 const port = new URLSearchParams(location.search).get('port')!;
 
 const canvas = document.querySelector<HTMLCanvasElement>('#plot')!;
