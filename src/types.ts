@@ -1,6 +1,8 @@
 import { ChartJs } from '../deps.ts';
 import * as Plotly from '../vendor/Ploty/index.d.ts';
 
+export type { ChartJs, Plotly };
+
 export type PlotEngine = 'ChartJs' | 'Plotly' | 'GCharts';
 
 type ChartJsDatas = ChartJs.ChartConfiguration;
