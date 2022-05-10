@@ -1,4 +1,4 @@
-// import * as ChartJs from 'https://cdn.skypack.dev/chart.js@3.7?min';
+import * as ChartJs from 'https://cdn.skypack.dev/chart.js@3.7?dts';
 // import * as Plotly from 'https://cdn.skypack.dev/plotly.js@2.11?dts';
 // import * as Plotly from 'https://esm.sh/plotly.js@2.11';
 
