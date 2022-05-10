@@ -15,20 +15,29 @@ import {
 } from './helpers.ts';
 
 const root = (() => {
-  const base = import.meta.url.split('/').slice(0, -2).join('/')
-  if (Deno.build.os === 'windows') {
-    return joinAndEscape(base.replace('file:///', ''))
+  const base = import.meta.url.split('/').slice(0, -2).join('/');
+  if (new URL(import.meta.url).protocol === 'https:') {
+    return base;
   }
-  return joinAndEscape(base.replace('file://', ''))
-})()
+  if (Deno.build.os === 'windows') {
+    return joinAndEscape(base.replace('file:///', ''));
+  }
+  return joinAndEscape(base.replace('file://', ''));
+})();
 
 async function bundleUI(request: Request): Promise<Response> {
-  const file = (new URL(request.url)).pathname;
-  if (file.endsWith('.ico')) return new Response(null);
-  return new Response(await Deno.readTextFile(`${root}/public${file}`), {
+  const fileName = (new URL(request.url)).pathname;
+  if (fileName.endsWith('.ico')) return new Response(null);
+  const file = await (async () => {
+    if (new URL(import.meta.url).protocol === 'https:') {
+      return await (await fetch(`${root}/public${fileName}`)).text();
+    }
+    return await Deno.readTextFile(`${root}/public${fileName}`);
+  })();
+  return new Response(file, {
     headers: {
       'content-type': `${
-        lookup(`${root}/public${file}`) ?? 'text/plain'
+        lookup(`${root}/public${fileName}`) ?? 'text/plain'
       }; charset=utf-8`,
     },
   });
@@ -83,7 +92,9 @@ export class Deplot {
     const port = this.#options.port;
 
     const spawn = async () => {
-      await Deno.mkdir(`temp-deplot-${windowId}`);
+      const tempDir = joinAndEscape(Deno.cwd(), `temp-deplot-${windowId}`);
+
+      await Deno.mkdir(tempDir);
 
       const denoRun = [
         joinAndEscape(Deno.execPath()),
@@ -99,11 +110,11 @@ export class Deplot {
       ].join(' ');
 
       let shell = 'bash';
-      let args = ['-c', `(cd temp-deplot-${windowId} && ${denoRun})`];
+      let args = ['-c', `(cd ${tempDir} && ${denoRun})`];
 
       if (Deno.build.os === 'windows') {
         shell = 'cmd';
-        args = ['/c', `(cd temp-deplot-${windowId} && ${denoRun})`];
+        args = ['/c', `(cd ${tempDir} && ${denoRun})`];
       }
 
       Deno.spawn(shell, { args }).then(({ status, stderr }) => {
@@ -115,7 +126,7 @@ export class Deplot {
           this.#wsBuffer.delete(windowId);
           this.#windows.delete(windowId);
           this.#options.closeCallback();
-          Deno.remove(`temp-deplot-${windowId}`, { recursive: true });
+          Deno.remove(tempDir, { recursive: true });
           throw new Error(
             `Unable to start child process ${windowId} to handle plot UI on ${tries}${
               tries === 1 ? 'st' : 'th'
@@ -126,7 +137,7 @@ export class Deplot {
         this.#wsBuffer.delete(windowId);
         this.#windows.delete(windowId);
         this.#options.closeCallback();
-        Deno.remove(`temp-deplot-${windowId}`, { recursive: true });
+        Deno.remove(tempDir, { recursive: true });
       });
     };
 
