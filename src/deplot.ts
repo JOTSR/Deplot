@@ -16,6 +16,9 @@ import {
 
 const root = (() => {
   const base = import.meta.url.split("/").slice(0, -2).join("/");
+  if (new URL(import.meta.url).protocol === 'https:') {
+    return base
+  }
   if (Deno.build.os === "windows") {
     return joinAndEscape(base.replace("file:///", ""));
   }
