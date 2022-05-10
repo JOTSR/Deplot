@@ -26,13 +26,18 @@ const root = (() => {
 })();
 
 async function bundleUI(request: Request): Promise<Response> {
-  const file = (new URL(request.url)).pathname;
-  if (file.endsWith('.ico')) return new Response(null);
-  console.log(`${root}/public${file}`);
-  return new Response(await Deno.readTextFile(`${root}/public${file}`), {
+  const fileName = (new URL(request.url)).pathname;
+  if (fileName.endsWith('.ico')) return new Response(null);
+  const file = await (async () => {
+    if (new URL(import.meta.url).protocol === 'https:') {
+      return await (await fetch(`${root}/public${fileName}`)).text();
+    }
+    return await Deno.readTextFile(`${root}/public${fileName}`);
+  })();
+  return new Response(file, {
     headers: {
       'content-type': `${
-        lookup(`${root}/public${file}`) ?? 'text/plain'
+        lookup(`${root}/public${fileName}`) ?? 'text/plain'
       }; charset=utf-8`,
     },
   });
