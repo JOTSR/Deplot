@@ -5,34 +5,34 @@ import {
   serve,
   WebSocketClient,
   WebSocketServer,
-} from "../deps.ts";
-import { Config, Datas, DeplotOptions, Plot, PlotEngine } from "./types.ts";
+} from '../deps.ts';
+import { Config, Datas, DeplotOptions, Plot, PlotEngine } from './types.ts';
 import {
   copyObj,
   joinAndEscape,
   parseMessage,
   stringifyMessage,
-} from "./helpers.ts";
+} from './helpers.ts';
 
 const root = (() => {
-  const base = import.meta.url.split("/").slice(0, -2).join("/");
+  const base = import.meta.url.split('/').slice(0, -2).join('/');
   if (new URL(import.meta.url).protocol === 'https:') {
-    return base
+    return base;
   }
-  if (Deno.build.os === "windows") {
-    return joinAndEscape(base.replace("file:///", ""));
+  if (Deno.build.os === 'windows') {
+    return joinAndEscape(base.replace('file:///', ''));
   }
-  return joinAndEscape(base.replace("file://", ""));
+  return joinAndEscape(base.replace('file://', ''));
 })();
 
 async function bundleUI(request: Request): Promise<Response> {
   const file = (new URL(request.url)).pathname;
-  if (file.endsWith(".ico")) return new Response(null);
-  console.log(root, file)
+  if (file.endsWith('.ico')) return new Response(null);
+  console.log(`${root}/public${file}`);
   return new Response(await Deno.readTextFile(`${root}/public${file}`), {
     headers: {
-      "content-type": `${
-        lookup(`${root}/public${file}`) ?? "text/plain"
+      'content-type': `${
+        lookup(`${root}/public${file}`) ?? 'text/plain'
       }; charset=utf-8`,
     },
   });
@@ -60,17 +60,17 @@ export class Deplot {
 
     const wss = new WebSocketServer(options.port);
 
-    wss.on("connection", (ws: WebSocketClient) => {
-      ws.on("message", (message: string) => {
+    wss.on('connection', (ws: WebSocketClient) => {
+      ws.on('message', (message: string) => {
         const { id, payload, result } = parseMessage(message);
-        if ("event" in payload && payload.event === "success") {
+        if ('event' in payload && payload.event === 'success') {
           this.#websockets.set(id, ws);
           const payload = this.#wsBuffer.get(id)!;
           this.#wsBuffer.delete(id);
           const message = stringifyMessage({ id, payload });
           ws.send(message);
         }
-        if ("event" in payload && payload.event === "error") {
+        if ('event' in payload && payload.event === 'error') {
           this.#wsBuffer.delete(id);
           throw new Error(`Error on connection from plot ${id}: ${result}`);
         }
@@ -79,7 +79,7 @@ export class Deplot {
   }
 
   plot(datas: Datas, config: Config) /*: Plot*/ {
-    config = { title: config.title ?? "deplot", size: config.size };
+    config = { title: config.title ?? 'deplot', size: config.size };
 
     let tries = 0;
     const windowId = crypto.randomUUID();
@@ -93,23 +93,23 @@ export class Deplot {
 
       const denoRun = [
         joinAndEscape(Deno.execPath()),
-        "run --unstable",
-        "--allow-net=0.0.0.0,127.0.0.1,localhost",
-        "--allow-read --allow-write",
-        "--allow-env=PLUGIN_URL,DENO_DIR,LOCALAPPDATA",
-        "--allow-ffi",
-        "--no-check",
+        'run --unstable',
+        '--allow-net=0.0.0.0,127.0.0.1,localhost',
+        '--allow-read --allow-write',
+        '--allow-env=PLUGIN_URL,DENO_DIR,LOCALAPPDATA',
+        '--allow-ffi',
+        '--no-check',
         `${root}/src/server.ts`,
         `${windowId} ${this.#plotEngine} ${String(port)}`,
-        `${config.size.join(" ")}`,
-      ].join(" ");
+        `${config.size.join(' ')}`,
+      ].join(' ');
 
-      let shell = "bash";
-      let args = ["-c", `(cd ${tempDir} && ${denoRun})`];
+      let shell = 'bash';
+      let args = ['-c', `(cd ${tempDir} && ${denoRun})`];
 
-      if (Deno.build.os === "windows") {
-        shell = "cmd";
-        args = ["/c", `(cd ${tempDir} && ${denoRun})`];
+      if (Deno.build.os === 'windows') {
+        shell = 'cmd';
+        args = ['/c', `(cd ${tempDir} && ${denoRun})`];
       }
 
       Deno.spawn(shell, { args }).then(({ status, stderr }) => {
@@ -124,7 +124,7 @@ export class Deplot {
           Deno.remove(tempDir, { recursive: true });
           throw new Error(
             `Unable to start child process ${windowId} to handle plot UI on ${tries}${
-              tries === 1 ? "st" : "th"
+              tries === 1 ? 'st' : 'th'
             } try => ${new TextDecoder().decode(stderr)}`,
           );
         }
@@ -152,31 +152,31 @@ export class Deplot {
     return { _id, datas, config };
   }
 
-  close({ _id }: Pick<Plot, "_id">) {
+  close({ _id }: Pick<Plot, '_id'>) {
     String(_id);
-    throw new Error("Not implemented");
+    throw new Error('Not implemented');
   }
 
   screenShot(
-    { _id }: Pick<Plot, "_id">,
+    { _id }: Pick<Plot, '_id'>,
     fileName: string,
     callback: (path: string) => unknown,
   ) {
     const message = stringifyMessage({
       id: _id,
-      payload: { action: "screenshot" },
+      payload: { action: 'screenshot' },
     });
     this.#websockets.get(_id)?.send(message);
-    this.#websockets.get(_id)?.on("message", (message: string) => {
+    this.#websockets.get(_id)?.on('message', (message: string) => {
       const { payload, result } = parseMessage(message);
-      if (result === "error") {
+      if (result === 'error') {
         throw new Error(`Unable to take screenShot: ${payload}`);
       }
       const path = join(Deno.cwd(), fileName);
       ensureFile(path);
       //write file
       callback(path);
-      throw new Error("Not implemented");
+      throw new Error('Not implemented');
     });
   }
 }
