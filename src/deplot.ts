@@ -1,19 +1,30 @@
 import {
   ensureFile,
   join,
+  lookup,
   serve,
-  staticFiles,
   WebSocketClient,
   WebSocketServer,
 } from '../deps.ts';
 import { Config, Datas, DeplotOptions, Plot, PlotEngine } from './types.ts';
-import { copyObj, parseMessage, stringifyMessage } from './helpers.ts';
+import {
+  copyObj,
+  joinAndEscape,
+  parseMessage,
+  stringifyMessage,
+} from './helpers.ts';
 
-const serveFiles = (req: Request) =>
-  staticFiles.default(`${Deno.cwd()}/public`)({
-    request: req,
-    respondWith: (r: Response) => r,
+async function bundleUI(request: Request): Promise<Response> {
+  const file = (new URL(request.url)).pathname;
+  if (file.endsWith('.ico')) return new Response(null);
+  return new Response(await Deno.readTextFile(`public${file}`), {
+    headers: {
+      'content-type': `${
+        lookup(`public${file}`) ?? 'text/plain'
+      }; charset=utf-8`,
+    },
   });
+}
 
 export class Deplot {
   #plotEngine: PlotEngine;
@@ -33,8 +44,7 @@ export class Deplot {
     this.#plotEngine = plotEngine;
     this.#options = { ...options };
 
-    //@ts-ignore from example
-    serve((req) => serveFiles(req), { addr: `:${options.port + 1}` });
+    serve(bundleUI, { port: this.#options.port + 1 });
 
     const wss = new WebSocketServer(options.port);
 
@@ -68,24 +78,24 @@ export class Deplot {
       await Deno.mkdir(`temp-${windowId}`);
 
       const denoRun = [
-        // Deno.execPath().replaceAll(' ', '^ '),
-        Deno.execPath().split(/\/|\\/g).map(e => e.includes(' ') ? `"${e}"` : e).join('/'),
+        joinAndEscape(Deno.execPath()),
         'run --unstable',
         '--allow-net=0.0.0.0,127.0.0.1,localhost',
         '--allow-read --allow-write',
         '--allow-env=PLUGIN_URL,DENO_DIR,LOCALAPPDATA',
         '--allow-ffi',
-        `"${join(Deno.cwd(), '/src/server.ts')}"`,
+        '--no-check',
+        `${joinAndEscape(Deno.cwd(), '/src/server.ts')}`,
         `${windowId} ${this.#plotEngine} ${String(port)}`,
         `${config.size.join(' ')}`,
       ].join(' ');
 
       let shell = 'bash';
-      let args = ['-c', `cd temp-${windowId} && ${denoRun}`];
+      let args = ['-c', `(cd temp-${windowId} && ${denoRun})`];
 
       if (Deno.build.os === 'windows') {
         shell = 'cmd';
-        args = ['/c', `cd temp-${windowId} && ${denoRun}`];
+        args = ['/c', `(cd temp-${windowId} && ${denoRun})`];
       }
 
       Deno.spawn(shell, { args }).then(({ status, stderr }) => {

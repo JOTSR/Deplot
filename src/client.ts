@@ -3,10 +3,14 @@ import * as Plotly from '../vendor/Ploty/index.d.ts';
 
 type PlotEngine = 'ChartJs' | 'Plotly' | 'GCharts';
 
-type ChartJsDatas = ChartJs.ChartConfiguration
-type PlotlyDatas = {data: Plotly.Data[], layout?: Partial<Plotly.Layout>, config?: Partial<Plotly.Config>}
+type ChartJsDatas = ChartJs.ChartConfiguration;
+type PlotlyDatas = {
+  data: Plotly.Data[];
+  layout?: Partial<Plotly.Layout>;
+  config?: Partial<Plotly.Config>;
+};
 
-type Datas = ChartJsDatas | PlotlyDatas
+type Datas = ChartJsDatas | PlotlyDatas;
 type Config = { title?: string; size: [number, number] };
 
 type WebSocketMessage = {
@@ -23,7 +27,9 @@ function parseMessage(message: string) {
 }
 
 const id = new URLSearchParams(location.search).get('id')!;
-const engine = new URLSearchParams(location.search).get('engine')! as PlotEngine;
+const engine = new URLSearchParams(location.search).get(
+  'engine',
+)! as PlotEngine;
 const port = new URLSearchParams(location.search).get('port')!;
 
 const canvas = document.querySelector<HTMLCanvasElement>('#plot')!;
@@ -65,14 +71,27 @@ ws.onmessage = ({ data }) => {
         }
       }
       ChartJs.Chart.register(...registerables);
+      let { type, data, options } = payload.datas as ChartJsDatas;
+      options ??= {};
+      Object.assign(options, { responsive: true });
 
-      new ChartJs.Chart(ctx, payload.datas as ChartJsDatas);
+      new ChartJs.Chart(ctx, { type, data, options } as ChartJsDatas);
       return;
     }
     if (engine === 'Plotly') {
-      
-      const { data, layout, config } =  payload.datas as PlotlyDatas
-      Plotly.newPlot(canvas.parentElement!, data, layout, config)
+      const script = document.createElement('script');
+      script.src = '/plotly-2_11_1.min.js';
+      script.addEventListener('load', () => {
+        const Plotly = window['Plotly'];
+
+        const { data, layout, config } = payload.datas as PlotlyDatas;
+        Plotly.newPlot(canvas.parentElement!, data, layout, config);
+      });
+      script.addEventListener(
+        'error',
+        () => alert('Can\'t load Plotly from /public'),
+      );
+      document.body.appendChild(script);
       return;
     }
     if (engine === 'GCharts') {
@@ -87,6 +106,14 @@ addEventListener('resize', () => {
     for (const id in ChartJs.Chart.instances) {
       ChartJs.Chart.instances[id].resize();
     }
+    return;
+  }
+  if (engine === 'Plotly') {
+    const Plotly = window['Plotly'];
+    Plotly.relayout(canvas.parentElement!, {
+      width: innerWidth,
+      height: innerHeight,
+    });
     return;
   }
   canvas.setAttribute('width', String(window.innerWidth));

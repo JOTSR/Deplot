@@ -7,7 +7,7 @@ const webview = new Webview(Number(width), Number(height));
 webview.navigate(
   `http://localhost:${
     Number(port) + 1
-  }/bundle.html?id=${id}&engine=${engine}&port=${port}`,
+  }/index.html?id=${id}&engine=${engine}&port=${port}`,
 );
 
 webview.run();

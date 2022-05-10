@@ -7,5 +7,15 @@
       "deno.ns",
       "deno.unstable"
     ]
+  },
+  "lint": {
+    "files": {
+      "exclude": ["vendor", "public"]
+    }
+  },
+  "fmt": {
+    "files": {
+      "exclude": ["vendor", "public"]
+    }
   }
 }
