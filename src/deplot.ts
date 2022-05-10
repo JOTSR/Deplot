@@ -68,13 +68,14 @@ export class Deplot {
       await Deno.mkdir(`temp-${windowId}`);
 
       const denoRun = [
-        Deno.execPath(),
+        // Deno.execPath().replaceAll(' ', '^ '),
+        Deno.execPath().split(/\/|\\/g).map(e => e.includes(' ') ? `"${e}"` : e).join('/'),
         'run --unstable',
         '--allow-net=0.0.0.0,127.0.0.1,localhost',
         '--allow-read --allow-write',
         '--allow-env=PLUGIN_URL,DENO_DIR,LOCALAPPDATA',
         '--allow-ffi',
-        `${join(Deno.cwd(), '/src/server.ts')}`,
+        `"${join(Deno.cwd(), '/src/server.ts')}"`,
         `${windowId} ${this.#plotEngine} ${String(port)}`,
         `${config.size.join(' ')}`,
       ].join(' ');
@@ -93,7 +94,10 @@ export class Deplot {
             tries++;
             spawn();
           }
+          this.#wsBuffer.delete(windowId);
           this.#windows.delete(windowId);
+          this.#options.closeCallback();
+          Deno.remove(`temp-${windowId}`, { recursive: true });
           throw new Error(
             `Unable to start child process ${windowId} to handle plot UI on ${tries}${
               tries === 1 ? 'st' : 'th'
