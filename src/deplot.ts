@@ -25,6 +25,7 @@ const root = (() => {
 async function bundleUI(request: Request): Promise<Response> {
   const file = (new URL(request.url)).pathname;
   if (file.endsWith(".ico")) return new Response(null);
+  console.log(root, file)
   return new Response(await Deno.readTextFile(`${root}/public${file}`), {
     headers: {
       "content-type": `${
