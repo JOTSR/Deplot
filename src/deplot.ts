@@ -14,13 +14,21 @@ import {
   stringifyMessage,
 } from './helpers.ts';
 
+const root = (() => {
+  const base = import.meta.url.split('/').slice(0, -2).join('/')
+  if (Deno.build.os === 'windows') {
+    return joinAndEscape(base.replace('file:///', ''))
+  }
+  return joinAndEscape(base.replace('file://', ''))
+})()
+
 async function bundleUI(request: Request): Promise<Response> {
   const file = (new URL(request.url)).pathname;
   if (file.endsWith('.ico')) return new Response(null);
-  return new Response(await Deno.readTextFile(`public${file}`), {
+  return new Response(await Deno.readTextFile(`${root}/public${file}`), {
     headers: {
       'content-type': `${
-        lookup(`public${file}`) ?? 'text/plain'
+        lookup(`${root}/public${file}`) ?? 'text/plain'
       }; charset=utf-8`,
     },
   });
@@ -75,7 +83,7 @@ export class Deplot {
     const port = this.#options.port;
 
     const spawn = async () => {
-      await Deno.mkdir(`temp-${windowId}`);
+      await Deno.mkdir(`temp-deplot-${windowId}`);
 
       const denoRun = [
         joinAndEscape(Deno.execPath()),
@@ -85,17 +93,17 @@ export class Deplot {
         '--allow-env=PLUGIN_URL,DENO_DIR,LOCALAPPDATA',
         '--allow-ffi',
         '--no-check',
-        `${joinAndEscape(Deno.cwd(), '/src/server.ts')}`,
+        `${root}/src/server.ts`,
         `${windowId} ${this.#plotEngine} ${String(port)}`,
         `${config.size.join(' ')}`,
       ].join(' ');
 
       let shell = 'bash';
-      let args = ['-c', `(cd temp-${windowId} && ${denoRun})`];
+      let args = ['-c', `(cd temp-deplot-${windowId} && ${denoRun})`];
 
       if (Deno.build.os === 'windows') {
         shell = 'cmd';
-        args = ['/c', `(cd temp-${windowId} && ${denoRun})`];
+        args = ['/c', `(cd temp-deplot-${windowId} && ${denoRun})`];
       }
 
       Deno.spawn(shell, { args }).then(({ status, stderr }) => {
@@ -107,7 +115,7 @@ export class Deplot {
           this.#wsBuffer.delete(windowId);
           this.#windows.delete(windowId);
           this.#options.closeCallback();
-          Deno.remove(`temp-${windowId}`, { recursive: true });
+          Deno.remove(`temp-deplot-${windowId}`, { recursive: true });
           throw new Error(
             `Unable to start child process ${windowId} to handle plot UI on ${tries}${
               tries === 1 ? 'st' : 'th'
@@ -118,7 +126,7 @@ export class Deplot {
         this.#wsBuffer.delete(windowId);
         this.#windows.delete(windowId);
         this.#options.closeCallback();
-        Deno.remove(`temp-${windowId}`, { recursive: true });
+        Deno.remove(`temp-deplot-${windowId}`, { recursive: true });
       });
     };
 
