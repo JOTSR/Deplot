@@ -1,5 +1,5 @@
 <p align="center">
-	<img align="center" src="./public/logo.png"  />
+	<img align="center" src="https://raw.githubusercontent.com/JOTSR/Deplot/main/public/logo.png"  />
 	<br>
 </p>
 
