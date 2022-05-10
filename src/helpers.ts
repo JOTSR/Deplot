@@ -1,3 +1,4 @@
+import { join } from '../deps.ts';
 import { WebSocketMessage } from './types.ts';
 
 export function copyObj<T>(obj: T): T {
@@ -10,4 +11,11 @@ export function parseMessage(message: string) {
 
 export function stringifyMessage(message: Omit<WebSocketMessage, 'result'>) {
   return JSON.stringify(message);
+}
+
+export function joinAndEscape(...paths: string[]) {
+  return join(
+    ...join(...paths).split(/\/|\\/g)
+      .map((e) => e.includes(' ') ? `"${e}"` : e),
+  );
 }
