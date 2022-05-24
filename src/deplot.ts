@@ -1,7 +1,6 @@
 import {
   ensureFile,
   join,
-  lookup,
   serve,
   WebSocketClient,
   WebSocketServer,
@@ -25,20 +24,22 @@ const root = (() => {
   return joinAndEscape(base.replace('file://', ''));
 })();
 
-async function bundleUI(request: Request): Promise<Response> {
+import { bundle } from '../public/bundle.ts';
+import { plotly } from '../public/plotly.ts';
+
+function bundleUI(request: Request): Response {
   const fileName = (new URL(request.url)).pathname;
   if (fileName.endsWith('.ico')) return new Response(null);
-  const file = await (async () => {
-    if (new URL(import.meta.url).protocol === 'https:') {
-      return await (await fetch(`${root}/public${fileName}`)).text();
-    }
-    return await Deno.readTextFile(`${root}/public${fileName}`);
-  })();
-  return new Response(file, {
+  if (fileName.endsWith('plotly.js')) {
+    return new Response(plotly, {
+      headers: {
+        'content-type': 'text/javascript; charset=utf-8',
+      },
+    });
+  }
+  return new Response(bundle, {
     headers: {
-      'content-type': `${
-        lookup(`${root}/public${fileName}`) ?? 'text/plain'
-      }; charset=utf-8`,
+      'content-type': 'text/html; charset=utf-8',
     },
   });
 }

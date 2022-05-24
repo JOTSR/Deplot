@@ -3,4 +3,12 @@ export default Deplot;
 
 export * from './src/deplot.ts';
 
-export type { ChartJs, Plotly, Datas, Plot, PlotEngine, Config, DeplotOptions} from './src/types.ts';
+export type {
+  ChartJs,
+  Config,
+  Datas,
+  DeplotOptions,
+  Plot,
+  PlotEngine,
+  Plotly,
+} from './src/types.ts';

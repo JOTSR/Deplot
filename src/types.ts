@@ -1,5 +1,5 @@
 import { ChartJs } from '../deps.ts';
-import * as Plotly from '../vendor/Ploty/index.d.ts';
+import * as Plotly from '../vendor/Plotly/index.d.ts';
 
 export type { ChartJs, Plotly };
 

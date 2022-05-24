@@ -1,5 +1,5 @@
 import * as ChartJs from 'https://cdn.skypack.dev/chart.js@3.7?dts';
-import * as Plotly from '../vendor/Ploty/index.d.ts';
+import * as Plotly from '../vendor/Plotly/index.d.ts';
 
 type PlotEngine = 'ChartJs' | 'Plotly' | 'GCharts';
 
@@ -79,19 +79,9 @@ ws.onmessage = ({ data }) => {
       return;
     }
     if (engine === 'Plotly') {
-      const script = document.createElement('script');
-      script.src = '/plotly-2_11_1.min.js';
-      script.addEventListener('load', () => {
-        const Plotly = window['Plotly'];
-
-        const { data, layout, config } = payload.datas as PlotlyDatas;
-        Plotly.newPlot(canvas.parentElement!, data, layout, config);
-      });
-      script.addEventListener(
-        'error',
-        () => alert('Can\'t load Plotly from /public'),
-      );
-      document.body.appendChild(script);
+      const Plotly = window['Plotly'];
+      const { data, layout, config } = payload.datas as PlotlyDatas;
+      Plotly.newPlot(canvas.parentElement!, data, layout, config);
       return;
     }
     if (engine === 'GCharts') {
