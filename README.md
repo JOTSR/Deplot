@@ -19,8 +19,7 @@ Use [Webview](https://deno.land/x/webview@0.7.0-pre.1) for window managing and
 plots libraries for tracing.
 
 **WARNING**: Still under active development, GChart is not supported,
-deplot.screenshot and deplot.update neither. Require internet connection until
-UI caching is not fixed.
+deplot.screenshot and deplot.update neither.
 
 ## Usage
 
