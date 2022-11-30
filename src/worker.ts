@@ -2,7 +2,12 @@
 import { Webview } from '../deps.ts';
 import type { MainThreadMessage, WorkerThreadMessage } from './types.ts';
 
+self.postMessage({
+	type: 'start',
+} as WorkerThreadMessage);
+
 addEventListener('message', ({ data }: MessageEvent<MainThreadMessage>) => {
+	console.log(data);
 	switch (data.type) {
 		case 'terminate':
 			self.close();
@@ -25,6 +30,7 @@ function execute(
 		{ type: 'execute' }
 	>['action'],
 ): WorkerThreadMessage {
+	console.log(name, args);
 	if (name === '__constructor__') {
 		const [debug, size] = args as ConstructorParameters<
 			typeof Webview

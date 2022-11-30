@@ -70,7 +70,6 @@ export class Deplot {
 	constructor(
 		plotEngine: PlotEngine,
 		options: DeplotOptions = {
-			connectMaxTries: 3,
 			port: 3123,
 			closeCallback: () => undefined,
 		},
@@ -126,53 +125,18 @@ export class Deplot {
 		) as UIWorker;
 		this.#workers.set(windowId, worker);
 
-		worker.postMessage<ConstructorParameters<typeof Webview>>({
-			type: 'execute',
-			action: {
-				name: '__constructor__',
-				args: [
-					false,
-					{
-						width: config.size[0],
-						height: config.size[1],
-						hint: SizeHint.MIN,
-					},
-				],
-			},
-		});
-
-		worker.postMessage<Parameters<Webview['navigate']>>({
-			type: 'execute',
-			action: {
-				name: 'navigate',
-				args: [
-					`http://localhost:${
-						port + 1
-					}/index.html?id=${windowId}&engine=${this.#plotEngine}&port=${port}`,
-				],
-			},
-		});
-
-		worker.postMessage<[Webview['title']]>({
-			type: 'execute',
-			action: {
-				name: 'title',
-				args: [config.title ?? `Deplot - ${windowId}`],
-			},
-		});
-
-		worker.postMessage<Parameters<Webview['run']>>({
-			type: 'execute',
-			action: {
-				name: 'run',
-				args: [],
-			},
-		});
-
 		worker.addEventListener(
 			'message',
 			({ data }: MessageEvent<WorkerThreadMessage>) => {
 				switch (data.type) {
+					case 'start':
+						initWorker(worker, {
+							config,
+							windowId,
+							plotEngine: this.#plotEngine,
+							port,
+						});
+						break;
 					case 'terminate':
 						this.#workers.delete(windowId);
 						this.#wsBuffer.delete(windowId);
@@ -232,4 +196,57 @@ export class Deplot {
 			throw new Error('Not implemented');
 		});
 	}
+}
+
+function initWorker(
+	worker: UIWorker,
+	{ config, windowId, plotEngine, port }: {
+		config: Config;
+		windowId: string;
+		plotEngine: PlotEngine;
+		port: number;
+	},
+) {
+	worker.postMessage<ConstructorParameters<typeof Webview>>({
+		type: 'execute',
+		action: {
+			name: '__constructor__',
+			args: [
+				false,
+				{
+					width: config.size[0],
+					height: config.size[1],
+					hint: SizeHint.MIN,
+				},
+			],
+		},
+	});
+
+	worker.postMessage<Parameters<Webview['navigate']>>({
+		type: 'execute',
+		action: {
+			name: 'navigate',
+			args: [
+				`http://localhost:${
+					port + 1
+				}/index.html?id=${windowId}&engine=${plotEngine}&port=${port}`,
+			],
+		},
+	});
+
+	worker.postMessage<[Webview['title']]>({
+		type: 'execute',
+		action: {
+			name: 'title',
+			args: [config.title ?? `Deplot - ${windowId}`],
+		},
+	});
+
+	worker.postMessage<Parameters<Webview['run']>>({
+		type: 'execute',
+		action: {
+			name: 'run',
+			args: [],
+		},
+	});
 }

@@ -19,7 +19,6 @@ export type Config = { title?: string; size: [number, number] };
 export type Plot = { _id: string; datas: Datas; config: Config };
 export type DeplotOptions = {
 	closeCallback: () => unknown;
-	connectMaxTries: number;
 	port: number;
 };
 
@@ -57,5 +56,5 @@ export type WorkerThreadMessage<T = unknown> = {
 	type: 'result';
 	return?: { name: Actions; value: T };
 } | {
-	type: 'terminate';
+	type: 'terminate' | 'start';
 };
