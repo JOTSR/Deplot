@@ -1,3 +1,5 @@
+/// <reference lib="dom" />
+
 import * as ChartJs from 'https://cdn.skypack.dev/chart.js@3.7?dts';
 import * as Plotly from '../vendor/Plotly/index.d.ts';
 
