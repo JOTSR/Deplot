@@ -1,28 +1,22 @@
 import {
   ensureFile,
-  join,
+  path,
   serve,
+  SizeHint,
   WebSocketClient,
   WebSocketServer,
+  Webview,
 } from '../deps.ts';
-import { Config, Datas, DeplotOptions, Plot, PlotEngine } from './types.ts';
 import {
-  copyObj,
-  joinAndEscape,
-  parseMessage,
-  stringifyMessage,
-} from './helpers.ts';
-
-const root = (() => {
-  const base = import.meta.url.split('/').slice(0, -2).join('/');
-  if (new URL(import.meta.url).protocol === 'https:') {
-    return base;
-  }
-  if (Deno.build.os === 'windows') {
-    return joinAndEscape(base.replace('file:///', ''));
-  }
-  return joinAndEscape(base.replace('file://', ''));
-})();
+  Config,
+  Datas,
+  DeplotOptions,
+  Plot,
+  PlotEngine,
+  UIWorker,
+  WorkerThreadMessage,
+} from './types.ts';
+import { copyObj, parseMessage, stringifyMessage } from './helpers.ts';
 
 import { bundle } from '../public/bundle.ts';
 import { plotly } from '../public/plotly.ts';
@@ -44,12 +38,34 @@ function bundleUI(request: Request): Response {
   });
 }
 
+const workerOptions: WorkerOptions = {
+  type: 'module',
+  deno: {
+    permissions: {
+      net: [
+        '0.0.0.0',
+        '127.0.0.1',
+        'localhost',
+      ],
+      read: true,
+      write: true,
+      env: [
+        'PLUGIN_URL',
+        'DENO_DIR',
+        'LOCALAPPDATA',
+      ],
+      ffi: true,
+    },
+  },
+};
+
 export class Deplot {
   #plotEngine: PlotEngine;
   #options: DeplotOptions;
   #windows: Set<string> = new Set();
   #websockets: Map<string, WebSocketClient> = new Map();
   #wsBuffer: Map<string, { datas: Datas; config: Config }> = new Map();
+  #workers: Map<string, UIWorker> = new Map();
 
   constructor(
     plotEngine: PlotEngine,
@@ -84,65 +100,75 @@ export class Deplot {
     });
   }
 
-  plot(datas: Datas, config: Config) /*: Plot*/ {
+  plot(datas: Datas, config: Config): Plot {
     config = { title: config.title ?? 'deplot', size: config.size };
 
-    let tries = 0;
     const windowId = crypto.randomUUID();
     this.#windows.add(windowId);
     const port = this.#options.port;
 
-    const spawn = async () => {
-      const tempDir = joinAndEscape(Deno.cwd(), `temp-deplot-${windowId}`);
+    const worker = new Worker(
+      import.meta.resolve('./worker.ts'),
+      workerOptions,
+    ) as UIWorker;
+    this.#workers.set(windowId, worker);
 
-      await Deno.mkdir(tempDir);
+    worker.postMessage<ConstructorParameters<typeof Webview>>({
+      type: 'execute',
+      action: {
+        name: '__constructor__',
+        args: [
+          false,
+          {
+            width: config.size[0],
+            height: config.size[1],
+            hint: SizeHint.MIN,
+          },
+        ],
+      },
+    });
 
-      const denoRun = [
-        joinAndEscape(Deno.execPath()),
-        'run --unstable',
-        '--allow-net=0.0.0.0,127.0.0.1,localhost',
-        '--allow-read --allow-write',
-        '--allow-env=PLUGIN_URL,DENO_DIR,LOCALAPPDATA',
-        '--allow-ffi',
-        '--no-check',
-        `${root}/src/server.ts`,
-        `${windowId} ${this.#plotEngine} ${String(port)}`,
-        `${config.size.join(' ')}`,
-      ].join(' ');
+    worker.postMessage<Parameters<Webview['navigate']>>({
+      type: 'execute',
+      action: {
+        name: 'navigate',
+        args: [
+          `http://localhost:${
+            port + 1
+          }/index.html?id=${windowId}&engine=${this.#plotEngine}&port=${port}`,
+        ],
+      },
+    });
 
-      let shell = 'bash';
-      let args = ['-c', `(cd ${tempDir} && ${denoRun})`];
+    worker.postMessage<[Webview['title']]>({
+      type: 'execute',
+      action: {
+        name: 'title',
+        args: [config.title ?? `Deplot - ${windowId}`],
+      },
+    });
 
-      if (Deno.build.os === 'windows') {
-        shell = 'cmd';
-        args = ['/c', `(cd ${tempDir} && ${denoRun})`];
-      }
+    worker.postMessage<Parameters<Webview['run']>>({
+      type: 'execute',
+      action: {
+        name: 'run',
+        args: [],
+      },
+    });
 
-      Deno.spawn(shell, { args }).then(({ status, stderr }) => {
-        if (!status.success) {
-          if (tries < this.#options.connectMaxTries) {
-            tries++;
-            spawn();
-          }
-          this.#wsBuffer.delete(windowId);
-          this.#windows.delete(windowId);
-          this.#options.closeCallback();
-          Deno.remove(tempDir, { recursive: true });
-          throw new Error(
-            `Unable to start child process ${windowId} to handle plot UI on ${tries}${
-              tries === 1 ? 'st' : 'th'
-            } try => ${new TextDecoder().decode(stderr)}`,
-          );
+    worker.addEventListener(
+      'message',
+      ({ data }: MessageEvent<WorkerThreadMessage>) => {
+        switch (data.type) {
+          case 'terminate':
+            this.#workers.delete(windowId);
+            this.#wsBuffer.delete(windowId);
+            this.#windows.delete(windowId);
+            this.#options.closeCallback();
+            break;
         }
-
-        this.#wsBuffer.delete(windowId);
-        this.#windows.delete(windowId);
-        this.#options.closeCallback();
-        Deno.remove(tempDir, { recursive: true });
-      });
-    };
-
-    spawn();
+      },
+    );
 
     this.#wsBuffer.set(windowId, {
       datas: copyObj(datas),
@@ -159,8 +185,7 @@ export class Deplot {
   }
 
   close({ _id }: Pick<Plot, '_id'>) {
-    String(_id);
-    throw new Error('Not implemented');
+    this.#workers.get(_id)?.terminate();
   }
 
   screenShot(
@@ -178,10 +203,10 @@ export class Deplot {
       if (result === 'error') {
         throw new Error(`Unable to take screenShot: ${payload}`);
       }
-      const path = join(Deno.cwd(), fileName);
-      ensureFile(path);
+      const filePath = path.join(Deno.cwd(), fileName);
+      ensureFile(filePath);
       //write file
-      callback(path);
+      callback(filePath);
       throw new Error('Not implemented');
     });
   }
