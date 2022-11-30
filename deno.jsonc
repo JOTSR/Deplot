@@ -1,12 +1,18 @@
 {
-  "lint": {
-    "files": {
-      "exclude": ["vendor", "public"]
-    }
-  },
-  "fmt": {
-    "files": {
-      "exclude": ["vendor", "public"]
-    }
-  }
+	"lint": {
+		"files": {
+			"exclude": ["vendor", "public"]
+		}
+	},
+	"fmt": {
+		"files": {
+			"exclude": ["vendor", "public"]
+		},
+		"options": {
+			"useTabs": true,
+			"proseWrap": "preserve",
+			"singleQuote": true,
+			"indentWidth": 4
+		}
+	}
 }

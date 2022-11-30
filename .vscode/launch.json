@@ -1,23 +1,23 @@
 {
-  // Utilisez IntelliSense pour en savoir plus sur les attributs possibles.
-  // Pointez pour afficher la description des attributs existants.
-  // Pour plus d'informations, visitez : https://go.microsoft.com/fwlink/?linkid=830387
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "request": "launch",
-      "name": "Launch current file",
-      "type": "pwa-node",
-      "program": "${file}",
-      "cwd": "${workspaceFolder}",
-      "runtimeExecutable": "C:\\Users\\xdrzj\\.deno\\bin\\deno.exe",
-      "runtimeArgs": [
-        "run",
-        "--unstable",
-        "--inspect",
-        "--allow-all"
-      ],
-      "attachSimplePort": 9229
-    }
-  ]
+	// Utilisez IntelliSense pour en savoir plus sur les attributs possibles.
+	// Pointez pour afficher la description des attributs existants.
+	// Pour plus d'informations, visitez : https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"request": "launch",
+			"name": "Launch current file",
+			"type": "pwa-node",
+			"program": "${file}",
+			"cwd": "${workspaceFolder}",
+			"runtimeExecutable": "C:\\Users\\xdrzj\\.deno\\bin\\deno.exe",
+			"runtimeArgs": [
+				"run",
+				"--unstable",
+				"--inspect",
+				"--allow-all"
+			],
+			"attachSimplePort": 9229
+		}
+	]
 }

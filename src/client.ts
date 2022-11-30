@@ -7,30 +7,30 @@ type PlotEngine = 'ChartJs' | 'Plotly' | 'GCharts';
 
 type ChartJsDatas = ChartJs.ChartConfiguration;
 type PlotlyDatas = {
-  data: Plotly.Data[];
-  layout?: Partial<Plotly.Layout>;
-  config?: Partial<Plotly.Config>;
+	data: Plotly.Data[];
+	layout?: Partial<Plotly.Layout>;
+	config?: Partial<Plotly.Config>;
 };
 
 type Datas = ChartJsDatas | PlotlyDatas;
 type Config = { title?: string; size: [number, number] };
 
 type WebSocketMessage = {
-  id: string;
-  payload:
-    | { datas: Datas; config: Config }
-    | { action: 'close' | 'screenshot' }
-    | { event: 'success' | 'error' };
-  result: string;
+	id: string;
+	payload:
+		| { datas: Datas; config: Config }
+		| { action: 'close' | 'screenshot' }
+		| { event: 'success' | 'error' };
+	result: string;
 };
 
 function parseMessage(message: string) {
-  return JSON.parse(message) as WebSocketMessage;
+	return JSON.parse(message) as WebSocketMessage;
 }
 
 const id = new URLSearchParams(location.search).get('id')!;
 const engine = new URLSearchParams(location.search).get(
-  'engine',
+	'engine',
 )! as PlotEngine;
 const port = new URLSearchParams(location.search).get('port')!;
 
@@ -40,74 +40,84 @@ const ctx = canvas!.getContext('2d')!;
 const ws = new WebSocket(`ws://localhost:${port}`);
 
 ws.onopen = () => {
-  const response = {
-    id,
-    payload: { event: 'success' },
-    result: `${id} opened`,
-  };
-  ws.send(JSON.stringify(response));
+	const response = {
+		id,
+		payload: { event: 'success' },
+		result: `${id} opened`,
+	};
+	ws.send(JSON.stringify(response));
 };
 
 ws.onerror = (e) => {
-  const response = { id, payload: { event: 'error' }, result: String(e) };
-  ws.send(JSON.stringify(response));
+	const response = { id, payload: { event: 'error' }, result: String(e) };
+	ws.send(JSON.stringify(response));
 };
 
 ws.onmessage = ({ data }) => {
-  const { id: _id, payload } = parseMessage(data);
+	const { id: _id, payload } = parseMessage(data);
 
-  if (_id === id && 'config' in payload) {
-    document.querySelector('title')!.innerText = payload.config.title ??
-      'deplot';
+	if (_id === id && 'config' in payload) {
+		document.querySelector('title')!.innerText = payload.config.title ??
+			'deplot';
 
-    canvas.setAttribute('width', String(payload.config.size[0]));
-    canvas.setAttribute('height', String(payload.config.size[1]));
-    globalThis.resizeTo(...payload.config.size);
+		canvas.setAttribute('width', String(payload.config.size[0]));
+		canvas.setAttribute('height', String(payload.config.size[1]));
+		globalThis.resizeTo(...payload.config.size);
 
-    if (engine === 'ChartJs') {
-      const registerables = [];
-      for (const _registerables of ChartJs.registerables) {
-        for (const key in _registerables) {
-          //@ts-ignore intern ChartJs type
-          registerables.push(ChartJs[key]);
-        }
-      }
-      ChartJs.Chart.register(...registerables);
-      let { type, data, options } = payload.datas as ChartJsDatas;
-      options ??= {};
-      Object.assign(options, { responsive: true });
+		if (engine === 'ChartJs') {
+			const registerables = [];
+			for (const _registerables of ChartJs.registerables) {
+				for (const key in _registerables) {
+					//@ts-ignore intern ChartJs type
+					registerables.push(ChartJs[key]);
+				}
+			}
+			ChartJs.Chart.register(...registerables);
+			let { type, data, options } = payload
+				.datas as ChartJsDatas;
+			options ??= {};
+			Object.assign(options, { responsive: true });
 
-      new ChartJs.Chart(ctx, { type, data, options } as ChartJsDatas);
-      return;
-    }
-    if (engine === 'Plotly') {
-      const Plotly = window['Plotly'];
-      const { data, layout, config } = payload.datas as PlotlyDatas;
-      Plotly.newPlot(canvas.parentElement!, data, layout, config);
-      return;
-    }
-    if (engine === 'GCharts') {
-      //const plot
-      return;
-    }
-  }
+			new ChartJs.Chart(
+				ctx,
+				{ type, data, options } as ChartJsDatas,
+			);
+			return;
+		}
+		if (engine === 'Plotly') {
+			const Plotly = window['Plotly'];
+			const { data, layout, config } = payload
+				.datas as PlotlyDatas;
+			Plotly.newPlot(
+				canvas.parentElement!,
+				data,
+				layout,
+				config,
+			);
+			return;
+		}
+		if (engine === 'GCharts') {
+			//const plot
+			return;
+		}
+	}
 };
 
 addEventListener('resize', () => {
-  if (engine === 'ChartJs') {
-    for (const id in ChartJs.Chart.instances) {
-      ChartJs.Chart.instances[id].resize();
-    }
-    return;
-  }
-  if (engine === 'Plotly') {
-    const Plotly = window['Plotly'];
-    Plotly.relayout(canvas.parentElement!, {
-      width: innerWidth,
-      height: innerHeight,
-    });
-    return;
-  }
-  canvas.setAttribute('width', String(window.innerWidth));
-  canvas.setAttribute('height', String(window.innerHeight));
+	if (engine === 'ChartJs') {
+		for (const id in ChartJs.Chart.instances) {
+			ChartJs.Chart.instances[id].resize();
+		}
+		return;
+	}
+	if (engine === 'Plotly') {
+		const Plotly = window['Plotly'];
+		Plotly.relayout(canvas.parentElement!, {
+			width: innerWidth,
+			height: innerHeight,
+		});
+		return;
+	}
+	canvas.setAttribute('width', String(window.innerWidth));
+	canvas.setAttribute('height', String(window.innerHeight));
 });
