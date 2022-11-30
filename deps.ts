@@ -1,7 +1,12 @@
 export { serve } from 'https://deno.land/std@0.140.0/http/server.ts';
 export { ensureFile } from 'https://deno.land/std@0.140.0/fs/ensure_file.ts';
-export { join } from 'https://deno.land/std@0.140.0/path/mod.ts';
-export { Webview } from 'https://deno.land/x/webview@0.7.0-pre.1/mod.ts';
+export * as path from 'https://deno.land/std@0.140.0/path/mod.ts';
+// export { Webview, SizeHint } from 'https://deno.land/x/webview@0.7.5/mod.ts';
+//TODO Reuse official webview when windows multiple instances is fixed
+export {
+  SizeHint,
+  Webview,
+} from 'https://raw.githubusercontent.com/JOTSR/webview_deno/main/mod.ts';
 export { WebSocketServer } from 'https://deno.land/x/websocket@v0.1.4/mod.ts';
 export type { WebSocketClient } from 'https://deno.land/x/websocket@v0.1.4/mod.ts';
 export { lookup } from 'https://deno.land/x/media_types@v3.0.3/mod.ts';
