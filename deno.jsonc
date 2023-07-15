@@ -12,7 +12,8 @@
 			"useTabs": true,
 			"proseWrap": "preserve",
 			"singleQuote": true,
-			"indentWidth": 4
+			"indentWidth": 4,
+			"semiColons": false
 		}
 	}
 }

@@ -6,7 +6,7 @@ import {
 	WebSocketClient,
 	WebSocketServer,
 	Webview,
-} from '../deps.ts';
+} from '../deps.ts'
 import {
 	Config,
 	Datas,
@@ -15,27 +15,27 @@ import {
 	PlotEngine,
 	UIWorker,
 	WorkerThreadMessage,
-} from './types.ts';
-import { copyObj, parseMessage, stringifyMessage } from './helpers.ts';
+} from './types.ts'
+import { copyObj, parseMessage, stringifyMessage } from './helpers.ts'
 
-import { bundle } from '../public/bundle.ts';
-import { plotly } from '../public/plotly.ts';
+import { bundle } from '../public/bundle.ts'
+import { plotly } from '../public/plotly.ts'
 
 function bundleUI(request: Request): Response {
-	const fileName = (new URL(request.url)).pathname;
-	if (fileName.endsWith('.ico')) return new Response(null);
+	const fileName = (new URL(request.url)).pathname
+	if (fileName.endsWith('.ico')) return new Response(null)
 	if (fileName.endsWith('plotly.js')) {
 		return new Response(plotly, {
 			headers: {
 				'content-type': 'text/javascript; charset=utf-8',
 			},
-		});
+		})
 	}
 	return new Response(bundle, {
 		headers: {
 			'content-type': 'text/html; charset=utf-8',
 		},
-	});
+	})
 }
 
 const workerOptions: WorkerOptions = {
@@ -57,15 +57,15 @@ const workerOptions: WorkerOptions = {
 			ffi: true,
 		},
 	},
-};
+}
 
 export class Deplot {
-	#plotEngine: PlotEngine;
-	#options: DeplotOptions;
-	#windows: Set<string> = new Set();
-	#websockets: Map<string, WebSocketClient> = new Map();
-	#wsBuffer: Map<string, { datas: Datas; config: Config }> = new Map();
-	#workers: Map<string, UIWorker> = new Map();
+	#plotEngine: PlotEngine
+	#options: DeplotOptions
+	#windows: Set<string> = new Set()
+	#websockets: Map<string, WebSocketClient> = new Map()
+	#wsBuffer: Map<string, { datas: Datas; config: Config }> = new Map()
+	#workers: Map<string, UIWorker> = new Map()
 
 	constructor(
 		plotEngine: PlotEngine,
@@ -74,56 +74,56 @@ export class Deplot {
 			closeCallback: () => undefined,
 		},
 	) {
-		this.#plotEngine = plotEngine;
-		this.#options = { ...options };
+		this.#plotEngine = plotEngine
+		this.#options = { ...options }
 
-		serve(bundleUI, { port: this.#options.port + 1 });
+		serve(bundleUI, { port: this.#options.port + 1 })
 
-		const wss = new WebSocketServer(options.port);
+		const wss = new WebSocketServer(options.port)
 
 		wss.on('connection', (ws: WebSocketClient) => {
 			ws.on('message', (message: string) => {
 				const { id, payload, result } = parseMessage(
 					message,
-				);
+				)
 				if (
 					'event' in payload &&
 					payload.event === 'success'
 				) {
-					this.#websockets.set(id, ws);
-					const payload = this.#wsBuffer.get(id)!;
-					this.#wsBuffer.delete(id);
+					this.#websockets.set(id, ws)
+					const payload = this.#wsBuffer.get(id)!
+					this.#wsBuffer.delete(id)
 					const message = stringifyMessage({
 						id,
 						payload,
-					});
-					ws.send(message);
+					})
+					ws.send(message)
 				}
 				if (
 					'event' in payload &&
 					payload.event === 'error'
 				) {
-					this.#wsBuffer.delete(id);
+					this.#wsBuffer.delete(id)
 					throw new Error(
 						`Error on connection from plot ${id}: ${result}`,
-					);
+					)
 				}
-			});
-		});
+			})
+		})
 	}
 
 	plot(datas: Datas, config: Config): Plot {
-		config = { title: config.title ?? 'deplot', size: config.size };
+		config = { title: config.title ?? 'deplot', size: config.size }
 
-		const windowId = crypto.randomUUID();
-		this.#windows.add(windowId);
-		const port = this.#options.port;
+		const windowId = crypto.randomUUID()
+		this.#windows.add(windowId)
+		const port = this.#options.port
 
 		const worker = new Worker(
 			import.meta.resolve('./worker.ts'),
 			workerOptions,
-		) as UIWorker;
-		this.#workers.set(windowId, worker);
+		) as UIWorker
+		this.#workers.set(windowId, worker)
 
 		worker.addEventListener(
 			'message',
@@ -135,41 +135,41 @@ export class Deplot {
 							windowId,
 							plotEngine: this.#plotEngine,
 							port,
-						});
-						break;
+						})
+						break
 					case 'terminate':
-						this.#workers.delete(windowId);
-						this.#wsBuffer.delete(windowId);
-						this.#windows.delete(windowId);
-						this.#options.closeCallback();
-						break;
+						this.#workers.delete(windowId)
+						this.#wsBuffer.delete(windowId)
+						this.#windows.delete(windowId)
+						this.#options.closeCallback()
+						break
 				}
 			},
-		);
+		)
 
 		this.#wsBuffer.set(windowId, {
 			datas: copyObj(datas),
 			config: copyObj(config),
-		});
+		})
 
 		return {
 			_id: windowId,
 			datas: copyObj(datas),
 			config: copyObj(config),
-		};
+		}
 	}
 
 	update({ _id, datas, config }: Plot): Plot {
 		const message = stringifyMessage({
 			id: _id,
 			payload: { datas, config },
-		});
-		this.#websockets.get(_id)?.send(message);
-		return { _id, datas, config };
+		})
+		this.#websockets.get(_id)?.send(message)
+		return { _id, datas, config }
 	}
 
 	close({ _id }: Pick<Plot, '_id'>) {
-		this.#workers.get(_id)?.terminate();
+		this.#workers.get(_id)?.terminate()
 	}
 
 	screenShot(
@@ -180,31 +180,31 @@ export class Deplot {
 		const message = stringifyMessage({
 			id: _id,
 			payload: { action: 'screenshot' },
-		});
-		this.#websockets.get(_id)?.send(message);
+		})
+		this.#websockets.get(_id)?.send(message)
 		this.#websockets.get(_id)?.on('message', (message: string) => {
-			const { payload, result } = parseMessage(message);
+			const { payload, result } = parseMessage(message)
 			if (result === 'error') {
 				throw new Error(
 					`Unable to take screenShot: ${payload}`,
-				);
+				)
 			}
-			const filePath = path.join(Deno.cwd(), fileName);
-			ensureFile(filePath);
+			const filePath = path.join(Deno.cwd(), fileName)
+			ensureFile(filePath)
 			//write file
-			callback(filePath);
-			throw new Error('Not implemented');
-		});
+			callback(filePath)
+			throw new Error('Not implemented')
+		})
 	}
 }
 
 function initWorker(
 	worker: UIWorker,
 	{ config, windowId, plotEngine, port }: {
-		config: Config;
-		windowId: string;
-		plotEngine: PlotEngine;
-		port: number;
+		config: Config
+		windowId: string
+		plotEngine: PlotEngine
+		port: number
 	},
 ) {
 	worker.postMessage<ConstructorParameters<typeof Webview>>({
@@ -220,7 +220,7 @@ function initWorker(
 				},
 			],
 		},
-	});
+	})
 
 	worker.postMessage<Parameters<Webview['navigate']>>({
 		type: 'execute',
@@ -232,7 +232,7 @@ function initWorker(
 				}/index.html?id=${windowId}&engine=${plotEngine}&port=${port}`,
 			],
 		},
-	});
+	})
 
 	worker.postMessage<[Webview['title']]>({
 		type: 'execute',
@@ -240,7 +240,7 @@ function initWorker(
 			name: 'title',
 			args: [config.title ?? `Deplot - ${windowId}`],
 		},
-	});
+	})
 
 	worker.postMessage<Parameters<Webview['run']>>({
 		type: 'execute',
@@ -248,5 +248,5 @@ function initWorker(
 			name: 'run',
 			args: [],
 		},
-	});
+	})
 }

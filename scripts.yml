@@ -1,6 +1,6 @@
 scripts:
   format:
-    cmd: deno fmt --options-single-quote --unstable
+    cmd: deno fmt
   
   lint:
     cmd: deno lint --unstable

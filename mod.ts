@@ -1,7 +1,7 @@
-import { Deplot } from './src/deplot.ts';
-export default Deplot;
+import { Deplot } from './src/deplot.ts'
+export default Deplot
 
-export * from './src/deplot.ts';
+export * from './src/deplot.ts'
 
 export type {
 	ChartJs,
@@ -11,4 +11,4 @@ export type {
 	Plot,
 	PlotEngine,
 	Plotly,
-} from './src/types.ts';
+} from './src/types.ts'

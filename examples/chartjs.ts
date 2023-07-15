@@ -1,7 +1,7 @@
-import { ChartJs } from '../deps.ts';
-import { Deplot } from '../mod.ts';
+import { ChartJs } from '../deps.ts'
+import { Deplot } from '../mod.ts'
 
-const deplot = new Deplot('ChartJs');
+const deplot = new Deplot('ChartJs')
 
 function lineChart() {
 	const data: ChartJs.ChartData = {
@@ -28,14 +28,14 @@ function lineChart() {
 				tension: 0.1,
 			},
 		],
-	};
+	}
 
 	const datas: ChartJs.ChartConfiguration = {
 		type: 'line',
 		data: data,
-	};
+	}
 
-	deplot.plot(datas, { title: 'ChartJs line plot', size: [500, 800] });
+	deplot.plot(datas, { title: 'ChartJs line plot', size: [500, 800] })
 }
 
 function barChart() {
@@ -62,7 +62,7 @@ function barChart() {
 			],
 			borderWidth: 1,
 		}],
-	};
+	}
 
 	const datas: ChartJs.ChartConfiguration = {
 		type: 'bar',
@@ -74,9 +74,9 @@ function barChart() {
 				},
 			},
 		},
-	};
+	}
 
-	deplot.plot(datas, { title: 'ChartJs bar plot', size: [300, 500] });
+	deplot.plot(datas, { title: 'ChartJs bar plot', size: [300, 500] })
 }
 
 function radarChart() {
@@ -114,7 +114,7 @@ function radarChart() {
 				pointHoverBorderColor: 'rgb(54, 162, 235)',
 			},
 		],
-	};
+	}
 
 	const datas: ChartJs.ChartConfiguration = {
 		type: 'radar',
@@ -126,9 +126,9 @@ function radarChart() {
 				},
 			},
 		},
-	};
+	}
 
-	deplot.plot(datas, { title: 'ChartJs radar plot', size: [400, 400] });
+	deplot.plot(datas, { title: 'ChartJs radar plot', size: [400, 400] })
 }
 
 function pieChart() {
@@ -146,17 +146,17 @@ function pieChart() {
 				hoverOffset: 4,
 			},
 		],
-	};
+	}
 
 	const datas: ChartJs.ChartConfiguration = {
 		type: 'doughnut',
 		data,
-	};
+	}
 
-	deplot.plot(datas, { title: 'ChartJs pie plot', size: [500, 500] });
+	deplot.plot(datas, { title: 'ChartJs pie plot', size: [500, 500] })
 }
 
-lineChart();
-barChart();
-radarChart();
-pieChart();
+lineChart()
+barChart()
+radarChart()
+pieChart()

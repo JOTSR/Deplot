@@ -26,36 +26,36 @@ deplot.screenshot and deplot.update neither.
 All the modules are exposed in `mod.ts`
 
 ```ts
-import { Datas, Deplot, Plotly } from 'https://deno.land/x/deplot/mod.ts';
+import { Datas, Deplot, Plotly } from 'https://deno.land/x/deplot/mod.ts'
 
-const deplot = new Deplot('Plotly');
+const deplot = new Deplot('Plotly')
 
 const trace: Plotly.Data = {
 	x: ['Zebras', 'Lions', 'Pelicans'],
 	y: [90, 40, 60],
 	type: 'bar',
 	name: 'New York Zoo',
-};
+}
 
 const layout: Partial<Plotly.Layout> = {
 	title: 'Hide the Modebar',
 	showlegend: true,
-};
+}
 
-const datas: Datas = { data: [trace], layout, config: { editable: true } };
+const datas: Datas = { data: [trace], layout, config: { editable: true } }
 
-deplot.plot(datas, { title: 'My plot', size: [800, 600] });
+deplot.plot(datas, { title: 'My plot', size: [800, 600] })
 
 const trace2: Plotly.Data = {
 	x: [1, 2, 3, 4, 5],
 	y: [4, 0, 4, 6, 8],
 	mode: 'lines+markers',
 	type: 'scatter',
-};
+}
 
-const datas2 = { data: [trace2], layout };
+const datas2 = { data: [trace2], layout }
 
-deplot.plot(datas, { title: 'My second plot', size: [450, 450] });
+deplot.plot(datas, { title: 'My second plot', size: [450, 450] })
 ```
 
 [Documentation](https://doc.deno.land/https://deno.land/x/deplot/mod.ts)
