@@ -6,13 +6,12 @@ scripts:
     cmd: deno lint --unstable
 
   update:
-    cmd: deno run --allow-net='x.nest.land,cdn.deno.land,api.deno.land,raw.githubusercontent.com,github.com,api.github.com,cdn.skypack.dev' --allow-read='.' --allow-write='deps.ts' https://deno.land/x/dmm@v1.3.2/mod.ts update
+    cmd: deno run --allow-net='x.nest.land,cdn.deno.land,api.deno.land,raw.githubusercontent.com,github.com,api.github.com,cdn.skypack.dev' --allow-read='.' --allow-write='deps.ts' https://deno.land/x/dmm@v2.1.1/mod.ts update
   
   check:
     cmd:
       - vr run lint
       - vr run format
-      - deno run --allow-net='x.nest.land,cdn.deno.land,api.deno.land,raw.githubusercontent.com,github.com,api.github.com,cdn.skypack.dev' --allow-read='.' --allow-write='deps.ts' https://deno.land/x/dmm@v1.3.2/mod.ts check
     gitHook: pre-commit
 
   examples:
