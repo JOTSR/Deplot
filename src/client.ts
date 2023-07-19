@@ -1,7 +1,16 @@
 /// <reference lib="dom" />
 
-import * as ChartJs from 'https://cdn.skypack.dev/chart.js@3.7?dts'
+import * as ChartJs from 'https://cdn.skypack.dev/chart.js?dts'
+import type { webui } from 'https://raw.githubusercontent.com/webui-dev/webui/d169029523b57c4d14e478be8aea96c03a516aef/src/client/webui.ts'
 import * as Plotly from '../vendor/Plotly/index.d.ts'
+
+declare global {
+	const webui: webui
+	const DeplotClient: {
+		plot: (datas: Datas, config: Config) => void
+		engine: PlotEngine
+	}
+}
 
 type PlotEngine = 'ChartJs' | 'Plotly' | 'GCharts'
 
@@ -15,56 +24,21 @@ type PlotlyDatas = {
 type Datas = ChartJsDatas | PlotlyDatas
 type Config = { title?: string; size: [number, number] }
 
-type WebSocketMessage = {
-	id: string
-	payload:
-		| { datas: Datas; config: Config }
-		| { action: 'close' | 'screenshot' }
-		| { event: 'success' | 'error' }
-	result: string
-}
-
-function parseMessage(message: string) {
-	return JSON.parse(message) as WebSocketMessage
-}
-
-const id = new URLSearchParams(location.search).get('id')!
-const engine = new URLSearchParams(location.search).get(
-	'engine',
-)! as PlotEngine
-const port = new URLSearchParams(location.search).get('port')!
-
-const canvas = document.querySelector<HTMLCanvasElement>('#plot')!
-const ctx = canvas!.getContext('2d')!
-
-const ws = new WebSocket(`ws://localhost:${port}`)
-
-ws.onopen = () => {
-	const response = {
-		id,
-		payload: { event: 'success' },
-		result: `${id} opened`,
+class DeplotClient {
+	static engine: PlotEngine
+	static get canvas() {
+		return document.querySelector<HTMLCanvasElement>('#plot')!
 	}
-	ws.send(JSON.stringify(response))
-}
 
-ws.onerror = (e) => {
-	const response = { id, payload: { event: 'error' }, result: String(e) }
-	ws.send(JSON.stringify(response))
-}
+	static #ctx = this.canvas!.getContext('2d')!
 
-ws.onmessage = ({ data }) => {
-	const { id: _id, payload } = parseMessage(data)
+	static plot(datas: Datas, config: Config) {
+		document.querySelector('title')!.innerText = config.title!
+		globalThis.resizeTo(...config.size)
+		this.canvas.setAttribute('width', String(config.size[0]))
+		this.canvas.setAttribute('height', String(config.size[1]))
 
-	if (_id === id && 'config' in payload) {
-		document.querySelector('title')!.innerText = payload.config.title ??
-			'deplot'
-
-		canvas.setAttribute('width', String(payload.config.size[0]))
-		canvas.setAttribute('height', String(payload.config.size[1]))
-		globalThis.resizeTo(...payload.config.size)
-
-		if (engine === 'ChartJs') {
+		if (this.engine === 'ChartJs') {
 			const registerables = []
 			for (const _registerables of ChartJs.registerables) {
 				for (const key in _registerables) {
@@ -73,51 +47,52 @@ ws.onmessage = ({ data }) => {
 				}
 			}
 			ChartJs.Chart.register(...registerables)
-			let { type, data, options } = payload
-				.datas as ChartJsDatas
+			let { type, data, options } = datas as ChartJsDatas
 			options ??= {}
 			Object.assign(options, { responsive: true })
 
 			new ChartJs.Chart(
-				ctx,
+				this.#ctx,
 				{ type, data, options } as ChartJsDatas,
 			)
 			return
 		}
-		if (engine === 'Plotly') {
+		if (this.engine === 'Plotly') {
 			const Plotly = window['Plotly']
-			const { data, layout, config } = payload
-				.datas as PlotlyDatas
+			const { data, layout, config } = datas as PlotlyDatas
 			Plotly.newPlot(
-				canvas.parentElement!,
+				this.canvas.parentElement!,
 				data,
 				layout,
 				config,
 			)
 			return
 		}
-		if (engine === 'GCharts') {
+		if (this.engine === 'GCharts') {
 			//const plot
 			return
 		}
 	}
 }
 
+//@ts-ignore global for access from backend
+globalThis['DeplotClient'] = DeplotClient
+
 addEventListener('resize', () => {
-	if (engine === 'ChartJs') {
+	if (DeplotClient.engine === 'ChartJs') {
 		for (const id in ChartJs.Chart.instances) {
 			ChartJs.Chart.instances[id].resize()
 		}
 		return
 	}
-	if (engine === 'Plotly') {
+	if (DeplotClient.engine === 'Plotly') {
 		const Plotly = window['Plotly']
-		Plotly.relayout(canvas.parentElement!, {
+		Plotly.relayout(DeplotClient.canvas.parentElement!, {
 			width: innerWidth,
 			height: innerHeight,
 		})
 		return
 	}
-	canvas.setAttribute('width', String(window.innerWidth))
-	canvas.setAttribute('height', String(window.innerHeight))
+	DeplotClient.canvas.setAttribute('width', String(window.innerWidth))
+	DeplotClient.canvas.setAttribute('height', String(window.innerHeight))
 })
