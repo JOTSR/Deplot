@@ -24,7 +24,11 @@ type PlotlyDatas = {
 type Datas = ChartJsDatas | PlotlyDatas
 type Config = { title?: string; size: [number, number] }
 
-class DeplotClient {
+export class DeplotClient {
+	constructor() {
+		throw new Error('not instanciable')
+	}
+
 	static engine: PlotEngine
 	static get canvas() {
 		return document.querySelector<HTMLCanvasElement>('#plot')!
