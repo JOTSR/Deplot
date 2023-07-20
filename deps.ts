@@ -5,7 +5,7 @@ export * as path from 'https://deno.land/std@0.166.0/path/mod.ts'
 export * as ChartJs from 'https://cdn.skypack.dev/chart.js@3.7?dts'
 export * as esbuild from 'https://deno.land/x/esbuild@v0.15.16/mod.js'
 export { default as httpFetch } from 'https://deno.land/x/esbuild_plugin_http_fetch@v1.0.3/index.js'
-export { WebUI } from 'https://raw.githubusercontent.com/webui-dev/deno-webui/2fa3b90752cb67c1bfa8377038db10f0ad413e19/mod.ts'
+export { WebUI } from 'https://raw.githubusercontent.com/webui-dev/deno-webui/d2442ae3e3d79e87842d8bda8c874826e8eeed69/mod.ts'
 import ensureVersion from 'https://deno.land/x/ensure_version@1.3.0/mod.ts'
 
 ensureVersion('>=1.20', false)
