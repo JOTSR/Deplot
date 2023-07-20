@@ -1,5 +1,4 @@
 export { ensureFile } from 'https://deno.land/std@0.195.0/fs/ensure_file.ts'
-export { serve } from 'https://deno.land/std@0.195.0/http/server.ts'
 export * as path from 'https://deno.land/std@0.195.0/path/mod.ts'
 // TODO move to next WebUI release
 export * as ChartJs from 'https://cdn.skypack.dev/chart.js@3.7?dts'
