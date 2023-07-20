@@ -34,13 +34,11 @@ export class Deplot {
 		return WebUI.wait()
 	}
 
-	plot(datas: Datas, config?: Config): Deplot {
+	async plot(datas: Datas, config?: Config) {
 		this.#datas = datas
 		this.#config = { ...this.#config, ...config }
 
-		this.#window.show(this.#html)
-
-		while (!this.#window.isShown);
+		await this.#window.show(this.#html)
 
 		this.#window.run(`DeplotClient.engine = "${this.#plotEngine}"`)
 		this.#window.run(
@@ -48,22 +46,20 @@ export class Deplot {
 				JSON.stringify(config)
 			})`,
 		)
-		return this
 	}
 
-	update(datas: Datas, config?: Config): Deplot {
-		return this.plot({ ...this.#datas, ...datas }, config)
+	update(datas: Datas, config?: Config) {
+		this.plot({ ...this.#datas, ...datas }, config)
 	}
 
-	close(): Deplot {
+	close() {
 		this.#window.close()
-		return this
 	}
 
 	async capture(
 		fileName: string,
 		callback?: (path: string) => void,
-	): Promise<Deplot> {
+	) {
 		try {
 			if (!this.#window.isShown) throw new Error('plot is not displayed')
 
@@ -83,7 +79,5 @@ export class Deplot {
 				{ cause },
 			)
 		}
-
-		return this
 	}
 }
