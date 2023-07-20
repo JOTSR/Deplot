@@ -1,8 +1,15 @@
 /// <reference lib="dom" />
 
-import * as ChartJs from 'https://cdn.skypack.dev/chart.js?dts'
 import type { webui } from 'https://raw.githubusercontent.com/webui-dev/webui/d169029523b57c4d14e478be8aea96c03a516aef/src/client/webui.ts'
+import * as ChartJs from 'https://cdn.skypack.dev/chart.js?dts'
 import type * as PlotlyJs from '../vendor/Plotly/index.d.ts'
+import type {
+	ChartJsDatas,
+	Config,
+	Datas,
+	PlotEngine,
+	PlotlyDatas,
+} from './types.ts'
 
 declare global {
 	const Plotly: typeof PlotlyJs
@@ -12,18 +19,6 @@ declare global {
 		engine: PlotEngine
 	}
 }
-
-type PlotEngine = 'ChartJs' | 'Plotly'
-
-type ChartJsDatas = ChartJs.ChartConfiguration
-type PlotlyDatas = {
-	data: Plotly.Data[]
-	layout?: Partial<Plotly.Layout>
-	config?: Partial<Plotly.Config>
-}
-
-type Datas = ChartJsDatas | PlotlyDatas
-type Config = { title?: string; size: [number, number] }
 
 export class DeplotClient {
 	constructor() {
@@ -59,6 +54,7 @@ export class DeplotClient {
 
 			this.#chartjsChart = new ChartJs.Chart(
 				this.#ctx,
+				//@ts-ignore type missmatch from version specifier
 				{ type, data, options } as ChartJsDatas,
 			)
 			return

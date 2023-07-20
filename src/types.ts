@@ -4,8 +4,8 @@ import * as Plotly from '../vendor/Plotly/index.d.ts'
 export type { ChartJs, Plotly }
 export type PlotEngine = 'ChartJs' | 'Plotly'
 
-type ChartJsDatas = ChartJs.ChartConfiguration
-type PlotlyDatas = {
+export type ChartJsDatas = ChartJs.ChartConfiguration
+export type PlotlyDatas = {
 	data: Plotly.Data[]
 	layout?: Partial<Plotly.Layout>
 	config?: Partial<Plotly.Config>

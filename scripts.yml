@@ -15,7 +15,7 @@ scripts:
     gitHook: pre-commit
 
   build:
-    cmd: deno run --allow-read --allow-write="./public" --allow-env --allow-run --allow-net="cdn.skypack.dev" ./build.ts
+    cmd: deno run --allow-read --allow-write="./public" --allow-env --allow-run --allow-net="cdn.skypack.dev,deno.land,raw.githubusercontent.com,ejm.sh" ./build.ts
 
   examples:
     cmd:
