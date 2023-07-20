@@ -66,7 +66,7 @@ export class Deplot {
 	): Promise<Deplot> {
 		try {
 			if (!this.#window.isShown) throw new Error('plot is not displayed')
-			
+
 			const dataUrl = await this.#window.script(
 				'return await DeplotClient.capture()',
 			)
