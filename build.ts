@@ -3,7 +3,7 @@ import { Base64, esbuild, httpFetch } from './deps.ts'
 // Loading assets
 console.log('Loading assets')
 const html = await Deno.readTextFile('./public/index.html')
-const icon = await Deno.readFile('./public/logo-min.png')
+const icon = await Deno.readFile('./public/favicon.png')
 const plotly = await Deno.readTextFile('./vendor/Plotly/plotly-2_11_1.min.js')
 
 // Building client.ts
