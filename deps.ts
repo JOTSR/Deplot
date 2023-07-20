@@ -7,4 +7,4 @@ export { default as httpFetch } from 'https://deno.land/x/esbuild_plugin_http_fe
 export { WebUI } from 'https://raw.githubusercontent.com/webui-dev/deno-webui/d2442ae3e3d79e87842d8bda8c874826e8eeed69/mod.ts'
 import ensureVersion from 'https://deno.land/x/ensure_version@1.3.0/mod.ts'
 
-ensureVersion('>=1.20', false)
+ensureVersion('>=1.30', false)
