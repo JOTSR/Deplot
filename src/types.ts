@@ -14,5 +14,13 @@ export type PlotlyDatas = {
 export type Datas = ChartJsDatas | PlotlyDatas
 export type Config = { title?: string; size: [number, number] }
 export type DeplotOptions = {
-	closeCallback: () => unknown
+	title?: string
+	size?: { width?: number; height?: number }
+	closeCallback?: () => unknown
+}
+
+export type RequiredDeplotOptions = {
+	title: string
+	size: { width: number; height: number }
+	closeCallback?: () => unknown
 }

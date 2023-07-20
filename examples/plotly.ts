@@ -1,5 +1,4 @@
-import { Deplot } from '../mod.ts'
-import { Datas } from '../src/types.ts'
+import { Datas, Deplot } from '../mod.ts'
 
 function editablePlot() {
 	const trace1: Plotly.Data = {
@@ -22,10 +21,10 @@ function editablePlot() {
 	}
 	const datas: Datas = { data, layout, config: { editable: true } }
 
-	new Deplot('Plotly').plot(datas, {
+	new Deplot('Plotly', {
 		title: 'ChartJs line plot',
-		size: [800, 800],
-	})
+		size: { width: 800, height: 800 },
+	}).plot(datas)
 }
 
 function barPlot() {
@@ -50,10 +49,11 @@ function barPlot() {
 	}
 	const datas: Datas = { data, layout, config: { editable: true } }
 
-	const deplot = new Deplot('Plotly').plot(datas, {
+	const deplot = new Deplot('Plotly', {
 		title: 'ChartJs line plot',
-		size: [800, 600],
+		size: { width: 700 },
 	})
+	deplot.plot(datas)
 
 	setTimeout(() => {
 		console.log(`closing plot`)

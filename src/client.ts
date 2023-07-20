@@ -33,12 +33,24 @@ export class DeplotClient {
 
 	static #ctx = this.canvas!.getContext('2d')!
 
-	static plot(datas: Datas, config: Config) {
-		document.querySelector('title')!.innerText = config.title!
-		globalThis.resizeTo(...config.size)
-		this.canvas.setAttribute('width', String(config.size[0]))
-		this.canvas.setAttribute('height', String(config.size[1]))
+	static set title(title: string) {
+		document.title = title
+	}
 
+	static set size({ width, height }: { width?: number; height?: number }) {
+		globalThis.resizeTo(
+			width ?? globalThis.outerWidth,
+			height ?? globalThis.outerHeight,
+		)
+		this.canvas.setAttribute('width', globalThis.innerWidth.toString())
+		this.canvas.setAttribute('height', globalThis.innerHeight.toString())
+	}
+
+	static get size() {
+		return { width: globalThis.outerWidth, height: globalThis.outerHeight }
+	}
+
+	static plot(datas: Datas) {
 		if (this.engine === 'ChartJs') {
 			const registerables = []
 			for (const _registerables of ChartJs.registerables) {

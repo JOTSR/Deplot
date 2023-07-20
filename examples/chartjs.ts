@@ -1,5 +1,4 @@
-import { ChartJs } from '../deps.ts'
-import { Deplot } from '../mod.ts'
+import { ChartJs, Deplot } from '../mod.ts'
 
 function lineChart() {
 	const data: ChartJs.ChartData = {
@@ -33,10 +32,10 @@ function lineChart() {
 		data: data,
 	}
 
-	new Deplot('ChartJs').plot(datas, {
+	new Deplot('ChartJs', {
 		title: 'ChartJs line plot',
-		size: [500, 800],
-	})
+		size: { width: 500, height: 800 },
+	}).plot(datas)
 }
 
 function barChart() {
@@ -77,10 +76,9 @@ function barChart() {
 		},
 	}
 
-	new Deplot('ChartJs').plot(datas, {
+	new Deplot('ChartJs', {
 		title: 'ChartJs bar plot',
-		size: [300, 500],
-	})
+	}).plot(datas)
 }
 
 function radarChart() {
@@ -132,10 +130,10 @@ function radarChart() {
 		},
 	}
 
-	new Deplot('ChartJs').plot(datas, {
+	new Deplot('ChartJs', {
 		title: 'ChartJs radar plot',
-		size: [400, 400],
-	})
+		size: { width: 400 },
+	}).plot(datas)
 }
 
 function pieChart() {
@@ -160,10 +158,9 @@ function pieChart() {
 		data,
 	}
 
-	new Deplot('ChartJs').plot(datas, {
+	new Deplot('ChartJs', {
 		title: 'ChartJs pie plot',
-		size: [500, 500],
-	})
+	}).plot(datas)
 }
 
 lineChart()
