@@ -30,6 +30,7 @@ export class DeplotClient {
 	}
 
 	static engine: PlotEngine
+	static #chartjsChart: ChartJs.Chart
 	static get canvas() {
 		return document.querySelector<HTMLCanvasElement>('#plot')!
 	}
@@ -55,7 +56,7 @@ export class DeplotClient {
 			options ??= {}
 			Object.assign(options, { responsive: true })
 
-			new ChartJs.Chart(
+			this.#chartjsChart = new ChartJs.Chart(
 				this.#ctx,
 				{ type, data, options } as ChartJsDatas,
 			)
@@ -75,6 +76,23 @@ export class DeplotClient {
 		if (this.engine === 'GCharts') {
 			//const plot
 			return
+		}
+	}
+
+	static capture() {
+		if (this.engine === 'ChartJs') {
+			return this.#chartjsChart.toBase64Image()
+		}
+		if (this.engine === 'Plotly') {
+			return Plotly
+				.toImage(
+					DeplotClient.canvas.parentElement!,
+					{
+						width: window.innerWidth,
+						height: window.innerHeight,
+						format: 'png',
+					},
+				)
 		}
 	}
 }
