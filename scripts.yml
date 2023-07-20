@@ -14,6 +14,9 @@ scripts:
       - vr run format
     gitHook: pre-commit
 
+  build:
+    cmd: deno run --allow-read --allow-write="./public" --allow-env --allow-run --allow-net="cdn.skypack.dev" ./build.ts
+
   examples:
     cmd:
       - deno run --allow-read --allow-write --allow-net="0.0.0.0,127.0.0.1,localhost,ejm.sh" --allow-run --allow-env --allow-ffi --unstable ./examples/chartjs.ts
