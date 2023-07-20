@@ -2,9 +2,10 @@
 
 import * as ChartJs from 'https://cdn.skypack.dev/chart.js?dts'
 import type { webui } from 'https://raw.githubusercontent.com/webui-dev/webui/d169029523b57c4d14e478be8aea96c03a516aef/src/client/webui.ts'
-import * as Plotly from '../vendor/Plotly/index.d.ts'
+import type * as PlotlyJs from '../vendor/Plotly/index.d.ts'
 
 declare global {
+	const Plotly: typeof PlotlyJs
 	const webui: webui
 	const DeplotClient: {
 		plot: (datas: Datas, config: Config) => void
@@ -63,7 +64,6 @@ export class DeplotClient {
 			return
 		}
 		if (this.engine === 'Plotly') {
-			const Plotly = window['Plotly']
 			const { data, layout, config } = datas as PlotlyDatas
 			Plotly.newPlot(
 				this.canvas.parentElement!,
@@ -108,7 +108,6 @@ addEventListener('resize', () => {
 		return
 	}
 	if (DeplotClient.engine === 'Plotly') {
-		const Plotly = window['Plotly']
 		Plotly.relayout(DeplotClient.canvas.parentElement!, {
 			width: innerWidth,
 			height: innerHeight,
