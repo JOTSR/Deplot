@@ -13,7 +13,7 @@ declare global {
 	}
 }
 
-type PlotEngine = 'ChartJs' | 'Plotly' | 'GCharts'
+type PlotEngine = 'ChartJs' | 'Plotly'
 
 type ChartJsDatas = ChartJs.ChartConfiguration
 type PlotlyDatas = {
@@ -71,10 +71,6 @@ export class DeplotClient {
 				layout,
 				config,
 			)
-			return
-		}
-		if (this.engine === 'GCharts') {
-			//const plot
 			return
 		}
 	}

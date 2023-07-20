@@ -73,10 +73,3 @@ deno run --allow-read --allow-write --allow-net --allow-run --allow-env --allow-
 ```sh
 deno run --allow-read --allow-write --allow-net --allow-run --allow-env --allow-ffi --unstable --no-check https://deno.land/x/deplot/examples/chartjs.ts
 ```
-
-<!--
-[Google Charts](https://developers.google.com/chart/interactive/docs)
-
-```
-deno run --allow-ffi --unstable https://deno.land/x/deplot/examples/gcharts.ts
-``` -->

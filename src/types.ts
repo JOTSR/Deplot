@@ -3,7 +3,7 @@ import * as Plotly from '../vendor/Plotly/index.d.ts'
 
 export type { ChartJs, Plotly }
 
-export type PlotEngine = 'ChartJs' | 'Plotly' | 'GCharts'
+export type PlotEngine = 'ChartJs' | 'Plotly'
 
 type ChartJsDatas = ChartJs.ChartConfiguration
 type PlotlyDatas = {

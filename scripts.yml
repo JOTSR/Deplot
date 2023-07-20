@@ -21,7 +21,6 @@ scripts:
     cmd:
       - deno run --allow-read --allow-write --allow-net="0.0.0.0,127.0.0.1,localhost,ejm.sh" --allow-run --allow-env --allow-ffi --unstable ./examples/chartjs.ts
       - deno run --allow-read --allow-write --allow-net="0.0.0.0,127.0.0.1,localhost,ejm.sh" --allow-run --allow-env --allow-ffi --unstable ./examples/plotly.ts
-      # - deno run --allow-read="." --allow-env --allow-ffi --unstable ./examples/gcharts.ts
 
   test:
     cmd:
