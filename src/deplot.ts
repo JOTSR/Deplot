@@ -20,6 +20,13 @@ export class Deplot {
 	#datas?: Datas
 	#html = bundle
 
+	/**
+	 * Init a new Deplot instance.
+	 * @param {PlotEngine} plotEngine - Plot engine used for rendering and manipulating plots.
+	 * @param {DeplotOptions} options - Initial configuration of the window,
+	 * default is { title: 'Deplot', size: { width: 500, height: 500 } }.
+	 * Close allback option is called when the window is closed either from the backend or the UI.
+	 */
 	constructor(
 		plotEngine: PlotEngine,
 		options: DeplotOptions,
@@ -34,15 +41,22 @@ export class Deplot {
 		this.#options = { title, size, closeCallback } as RequiredDeplotOptions
 	}
 
+	/**
+	 * Prevent the main event loop to exit before all plots are closed.
+	 */
 	static wait() {
 		return WebUI.wait()
 	}
 
+	/**
+	 * Plot the `Datas` corresponding to the plot engine and open or refresh the window.
+	 * @param {Datas} datas - Plot datas.
+	 */
 	async plot(datas: Datas) {
 		this.#datas = datas
 
 		await this.#window.show(this.#html)
-		//wait to await for client js to be executed
+		//wait for client js to be executed
 		await new Promise((resolve) => setTimeout(resolve))
 
 		//config window
@@ -54,14 +68,27 @@ export class Deplot {
 		this.#window.run(`DeplotClient.plot(${JSON.stringify(datas)})`)
 	}
 
+	/**
+	 * Merge the actual datas with new datas and refresh the UI.
+	 * @param {Datas} datas - Datas to merge.
+	 */
 	update(datas: Datas) {
 		this.plot({ ...this.#datas, ...datas })
 	}
 
+	/**
+	 * Close the window.
+	 */
 	close() {
 		this.#window.close()
 	}
 
+	/**
+	 * Captures a screenshot of the plot and saves as png file.
+	 * @param {string} fileName - file name to save the captured image as.
+	 * @param [callback] - Called after the screenshot is captured and saved to a file.
+	 * @throws {Error} - If UI not respond correctly or is there is an error when decoding and writing the file.
+	 */
 	async capture(
 		fileName: string,
 		callback?: (path: string) => void | Promise<void>,
@@ -88,6 +115,9 @@ export class Deplot {
 		}
 	}
 
+	/**
+	 * Title of the window.
+	 */
 	set title(title: string) {
 		if (!this.#window.isShown) throw new Error('plot is not displayed')
 		this.#window.run(`DeplotClient.title = '${title}'`)
@@ -97,6 +127,14 @@ export class Deplot {
 		return this.#options.title
 	}
 
+	/**
+	 * Resize the window and the plot.
+	 * @param Size - { width, height } Must be integers between 100 and 10k.
+	 * - Size is in pixel and define the absolute window size.
+	 * - Undefined values are not updated.
+	 *
+	 * @returns Resolves when the size is updated.
+	 */
 	setSize({ width, height }: { width?: number; height?: number }) {
 		if (!this.#window.isShown) throw new Error('plot is not displayed')
 		if (width !== undefined) {
@@ -125,6 +163,11 @@ export class Deplot {
 			`DeplotClient.size = { width: ${width}, height: ${height} }`,
 		)
 	}
+
+	/**
+	 * Get the actual window size in pixels.
+	 * @returns Promise<Size> - { width, height }.
+	 */
 	async getSize() {
 		if (!this.#window.isShown) throw new Error('plot is not displayed')
 		const response = await this.#window.script('return DeplotClient.size')
@@ -138,6 +181,13 @@ export class Deplot {
 		}
 		return { width, height }
 	}
+
+	/**
+	 * Set the window position in pixels.
+	 * - (0, 0) is the top left corner of the screen
+	 * - (ScreenWidth, ScreenHeight) is the bottom right corner of the screen
+	 * @param Positions - { x, y } must be positives integers.
+	 */
 	setPosition({ x, y }: { x: number; y: number }) {
 		if (!this.#window.isShown) throw new Error('plot is not displayed')
 		if (!Number.isInteger(x) || x < 0) {
