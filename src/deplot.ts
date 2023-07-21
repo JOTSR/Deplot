@@ -48,14 +48,14 @@ export class Deplot {
 	 */
 	constructor(
 		plotEngine: PlotEngine,
-		options: DeplotOptions,
+		options?: DeplotOptions,
 	) {
 		this.#plotEngine = plotEngine
 		this.#window = new WebUI()
 		this.#window.setFileHandler(fileHandler)
 
-		const size = { ...{ width: 500, height: 500 }, ...options.size }
-		const title = options.title ?? 'Deplot'
+		const size = { ...{ width: 500, height: 500 }, ...options?.size }
+		const title = options?.title ?? 'Deplot'
 		// const closeCallback = options.closeCallback
 		this.#options = { title, size } as RequiredDeplotOptions
 	}
