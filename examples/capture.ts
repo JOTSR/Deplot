@@ -26,7 +26,10 @@ async function pieChart() {
 		title: 'ChartJs pie plot',
 	})
 	await pie.plot(datas)
-	await pie.capture('pie.png')
+	await pie.capture(
+		'pie.png',
+		(path) => console.log(`capture saved to "${path}"`),
+	)
 }
 
 async function editablePlot() {

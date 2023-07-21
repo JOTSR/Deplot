@@ -85,8 +85,12 @@ export class DeplotClient {
 		}
 	}
 
-	static capture() {
+	static async capture() {
 		if (this.engine === 'ChartJs') {
+			// Force plot to render
+			this.#chartjsChart.toBase64Image()
+			// Wait for animation to finish
+			await new Promise((resolve) => setTimeout(resolve, 1_000))
 			return this.#chartjsChart.toBase64Image()
 		}
 		if (this.engine === 'Plotly') {
