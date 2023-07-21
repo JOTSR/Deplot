@@ -14,6 +14,10 @@ scripts:
       - vr run format
     gitHook: pre-commit
 
+  changelog:
+    cmd: deno run -A npm:auto-changelog --commit-limit false
+    gitHook: pre-commit
+
   build:
     cmd: deno run --allow-read --allow-write="./public" --allow-env --allow-run --allow-net="cdn.skypack.dev,deno.land,raw.githubusercontent.com,ejm.sh" ./build.ts
 
