@@ -64,21 +64,22 @@ export class Deplot {
 
 	async capture(
 		fileName: string,
-		callback?: (path: string) => void,
+		callback?: (path: string) => void | Promise<void>,
 	) {
 		try {
 			if (!this.#window.isShown) throw new Error('plot is not displayed')
 
 			const dataUrl = await this.#window.script(
-				'return await DeplotClient.capture()',
+				'return (await DeplotClient.capture()) + " ".repeat(22)',
+				{ bufferSize: 5e5 * 8 },
 			)
-			const [_, __, base64] = dataUrl.match(/(.+,)?(.+)/)!
 
+			const [_, __, base64] = dataUrl.match(/(.+,)?(.+)/)!
 			const image = Base64.decode(base64)
 			const filePath = path.join(Deno.cwd(), fileName)
-			ensureFile(filePath)
+			await ensureFile(filePath)
 			await Deno.writeFile(filePath, image)
-			callback?.(filePath)
+			await callback?.(filePath)
 		} catch (cause) {
 			throw new Error(
 				`unable to take the screenShot`,
