@@ -22,10 +22,29 @@ export class Deplot {
 
 	/**
 	 * Init a new Deplot instance.
+	 * # Usage
 	 * @param {PlotEngine} plotEngine - Plot engine used for rendering and manipulating plots.
 	 * @param {DeplotOptions} options - Initial configuration of the window,
 	 * default is { title: 'Deplot', size: { width: 500, height: 500 } }.
 	 * Close allback option is called when the window is closed either from the backend or the UI.
+	 * # Examples
+	 * - Simpliest usage
+	 * ```ts
+	 * const simple = new Deplot('Plotly')
+	 * ```
+	 * - Define title
+	 * ```ts
+	 * const titled = new Deplot('ChartJs', { title: 'My titled plot' })
+	 * ```
+	 * - Define size
+	 * ```ts
+	 * const sized = new Deplot('Plotly', { size: { width: 720, height: 480 } })
+	 * ```
+	 * - Define partial size
+	 * ```ts
+	 * const simple = new Deplot('ChartJs', { size: { height: 800 } })
+	 * // Default width = 500
+	 * ```
 	 */
 	constructor(
 		plotEngine: PlotEngine,
@@ -43,6 +62,14 @@ export class Deplot {
 
 	/**
 	 * Prevent the main event loop to exit before all plots are closed.
+	 * # Examples
+	 * - Prevent event event loop to exit
+	 * ```ts
+	 * const barPlot = new Deplot('ChartJs')
+	 * const histPlot = new Deplot('Plotly')
+	 * // ...
+	 * Deplot.wait()
+	 * ```
 	 */
 	static wait() {
 		return WebUI.wait()
@@ -78,6 +105,13 @@ export class Deplot {
 
 	/**
 	 * Close the window.
+	 * # Examples
+	 * - Close the window
+	 * ```ts
+	 * const myPlot = new Deplot('ChartJs')
+	 *
+	 * myPlot.close()
+	 * ```
 	 */
 	close() {
 		this.#window.close()
@@ -85,9 +119,32 @@ export class Deplot {
 
 	/**
 	 * Captures a screenshot of the plot and saves as png file.
+	 * # Usage
 	 * @param {string} fileName - file name to save the captured image as.
 	 * @param [callback] - Called after the screenshot is captured and saved to a file.
 	 * @throws {Error} - If UI not respond correctly or is there is an error when decoding and writing the file.
+	 * # Examples
+	 * - Take a screenshot of the plot
+	 * ```ts
+	 * 	const plot = new Deplot('Plotly', {
+	 * 	 title: 'ChartJs line plot',
+	 * 	 size: { width: 800, height: 800 },
+	 * })
+	 * //...
+	 * await plot.plot(datas)
+	 * await plot.capture('plotly.png')
+	 * ```
+	 * - Use capature callback
+	 * ```ts
+	 * 	const pie = new Deplot('ChartJs', {
+	 * 	  title: 'ChartJs pie plot',
+	 *  })
+	 *  await pie.plot(datas)
+	 *  await pie.capture(
+	 * 	  'pie.png',
+	 * 	  (path) => console.log(`capture saved to "${path}"`),
+	 *  )
+	 * ```
 	 */
 	async capture(
 		fileName: string,
@@ -117,6 +174,17 @@ export class Deplot {
 
 	/**
 	 * Title of the window.
+	 * # Examples
+	 * - Set new title
+	 * ```ts
+	 * const myPlot = new Deplot('ChartJs', { title: 'Initial title' })
+	 *
+	 * myPlot.title = 'Updated title'
+	 * ```
+	 * - Get current title
+	 * ```ts
+	 * console.assert(myPlot.title, 'Updated title')
+	 * ```
 	 */
 	set title(title: string) {
 		if (!this.#window.isShown) throw new Error('plot is not displayed')
@@ -129,11 +197,19 @@ export class Deplot {
 
 	/**
 	 * Resize the window and the plot.
+	 * # Usage
 	 * @param Size - { width, height } Must be integers between 100 and 10k.
 	 * - Size is in pixel and define the absolute window size.
 	 * - Undefined values are not updated.
 	 *
 	 * @returns Resolves when the size is updated.
+	 * # Examples
+	 * - Set window size
+	 * ```ts
+	 * const myPlot = new Deplot('ChartJs')
+	 *
+	 * const firstSize = await myPlot.setSize({ width: 720, height: 480 })
+	 * ```
 	 */
 	setSize({ width, height }: { width?: number; height?: number }) {
 		if (!this.#window.isShown) throw new Error('plot is not displayed')
@@ -166,7 +242,17 @@ export class Deplot {
 
 	/**
 	 * Get the actual window size in pixels.
+	 * # Usage
 	 * @returns Promise<Size> - { width, height }.
+	 * # Examples
+	 * - Get window size
+	 * ```ts
+	 * const myPlot = new Deplot('Plotly')
+	 *
+	 * const firstSize = await myPlot.getSize()
+	 * // Resize window through UI
+	 * const secondSize = await myPlot.getSize()
+	 * ```
 	 */
 	async getSize() {
 		if (!this.#window.isShown) throw new Error('plot is not displayed')
@@ -184,9 +270,18 @@ export class Deplot {
 
 	/**
 	 * Set the window position in pixels.
+	 * # Usage
 	 * - (0, 0) is the top left corner of the screen
 	 * - (ScreenWidth, ScreenHeight) is the bottom right corner of the screen
 	 * @param Positions - { x, y } must be positives integers.
+	 * # Examples
+	 * - Center the plot on the screen
+	 * ```ts
+	 * const myPlot = new Deplot('Plotly')
+	 *
+	 * const { width, height } = await myPlot.getSize()
+	 * myPlot.setPosition((1080 - height) / 2, (1920 - width) / 2)
+	 * ```
 	 */
 	setPosition({ x, y }: { x: number; y: number }) {
 		if (!this.#window.isShown) throw new Error('plot is not displayed')
