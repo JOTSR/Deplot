@@ -42,9 +42,14 @@ export class Deplot {
 		this.#datas = datas
 
 		await this.#window.show(this.#html)
+		//wait to await for client js to be executed
+		await new Promise((resolve) => setTimeout(resolve))
 
-		this.setSize(this.#options.size)
+		//config window
+		await this.setSize(this.#options.size)
 		this.title = this.#options.title
+
+		//update plot
 		this.#window.run(`DeplotClient.engine = "${this.#plotEngine}"`)
 		this.#window.run(`DeplotClient.plot(${JSON.stringify(datas)})`)
 	}
@@ -113,7 +118,7 @@ export class Deplot {
 			width: width ?? this.#options.size.width,
 			height: height ?? this.#options.size.height,
 		}
-		this.#window.run(
+		return this.#window.script(
 			`DeplotClient.size = { width: ${width}, height: ${height} }`,
 		)
 	}
