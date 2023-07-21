@@ -54,7 +54,7 @@ async function editablePlot() {
 	const datas: Datas = { data, layout, config: { editable: true } }
 
 	const plot = new Deplot('Plotly', {
-		title: 'ChartJs line plot',
+		title: 'Plotly editable plot',
 		size: { width: 800, height: 800 },
 	})
 	await plot.plot(datas)
