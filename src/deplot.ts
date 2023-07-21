@@ -138,4 +138,18 @@ export class Deplot {
 		}
 		return { width, height }
 	}
+	setPosition({ x, y }: { x: number; y: number }) {
+		if (!this.#window.isShown) throw new Error('plot is not displayed')
+		if (!Number.isInteger(x) || x < 0) {
+			throw new TypeError(
+				`${x} is not a valid x position, if defined x must be a positive integer`,
+			)
+		}
+		if (!Number.isInteger(y) || y < 0) {
+			throw new TypeError(
+				`${y} is not a valid y position, if defined y must be a positive integer`,
+			)
+		}
+		this.#window.run(`DeplotClient.setPosition({ x: ${x}, y: ${y} })`)
+	}
 }

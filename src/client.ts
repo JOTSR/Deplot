@@ -50,6 +50,10 @@ export class DeplotClient {
 		return { width: globalThis.outerWidth, height: globalThis.outerHeight }
 	}
 
+	static setPosition({ x, y }: { x: number; y: number }) {
+		globalThis.moveTo(x, y)
+	}
+
 	static plot(datas: Datas) {
 		if (this.engine === 'ChartJs') {
 			this.canvas.style.display = 'block'
