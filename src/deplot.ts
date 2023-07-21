@@ -37,8 +37,8 @@ export class Deplot {
 
 		const size = { ...{ width: 500, height: 500 }, ...options.size }
 		const title = options.title ?? 'Deplot'
-		const closeCallback = options.closeCallback
-		this.#options = { title, size, closeCallback } as RequiredDeplotOptions
+		// const closeCallback = options.closeCallback
+		this.#options = { title, size } as RequiredDeplotOptions
 	}
 
 	/**

@@ -16,11 +16,11 @@ export type Config = { title?: string; size: [number, number] }
 export type DeplotOptions = {
 	title?: string
 	size?: { width?: number; height?: number }
-	closeCallback?: () => unknown
+	// closeCallback?: () => unknown
 }
 
 export type RequiredDeplotOptions = {
 	title: string
 	size: { width: number; height: number }
-	closeCallback?: () => unknown
+	// closeCallback?: () => unknown
 }
