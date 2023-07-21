@@ -8,7 +8,6 @@ export type {
 	Config,
 	Datas,
 	DeplotOptions,
-	Plot,
 	PlotEngine,
 	Plotly,
 } from './src/types.ts'
