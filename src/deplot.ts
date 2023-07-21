@@ -99,21 +99,23 @@ export class Deplot {
 
 	setSize({ width, height }: { width?: number; height?: number }) {
 		if (!this.#window.isShown) throw new Error('plot is not displayed')
-		if (
-			width !== undefined && !Number.isInteger(width) && width < 100 &&
-			width > 10_000
-		) {
-			throw new TypeError(
-				`${width} is not a valid width, if defined width must be an integer between 100 and 10_000`,
-			)
+		if (width !== undefined) {
+			if (
+				!Number.isInteger(width) || (width < 100 || width > 10_000)
+			) {
+				throw new TypeError(
+					`${width} is not a valid width, if defined width must be an integer between 100 and 10_000`,
+				)
+			}
 		}
-		if (
-			height !== undefined && !Number.isInteger(height) && height < 100 &&
-			height > 10_000
-		) {
-			throw new TypeError(
-				`${height} is not a valid height, if defined height must be an integer between 100 and 10_000`,
-			)
+		if (height !== undefined) {
+			if (
+				!Number.isInteger(height) || (height < 100 || height > 10_000)
+			) {
+				throw new TypeError(
+					`${height} is not a valid height, if defined height must be an integer between 100 and 10_000`,
+				)
+			}
 		}
 		this.#options.size = {
 			width: width ?? this.#options.size.width,
