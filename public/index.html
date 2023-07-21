@@ -10,15 +10,34 @@
 </head>
 
 <body>
-    <div id="plot_container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%">
+    <div id="plot_container">
         <canvas id="plot"></canvas>
     </div>
     <!-- <script src="./plotly.js"></script> -->
     <!-- client -->
 </body>
 <style>
+    * {
+        box-sizing: border-box;
+    }
+
     body {
         overflow: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
+    #plot_container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 </style>
 

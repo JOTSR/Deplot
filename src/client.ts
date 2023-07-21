@@ -52,6 +52,7 @@ export class DeplotClient {
 
 	static plot(datas: Datas) {
 		if (this.engine === 'ChartJs') {
+			this.canvas.style.display = 'block'
 			const registerables = []
 			for (const _registerables of ChartJs.registerables) {
 				for (const key in _registerables) {
@@ -72,6 +73,7 @@ export class DeplotClient {
 			return
 		}
 		if (this.engine === 'Plotly') {
+			this.canvas.style.display = 'none'
 			const { data, layout, config } = datas as PlotlyDatas
 			Plotly.newPlot(
 				this.canvas.parentElement!,
