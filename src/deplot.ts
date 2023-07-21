@@ -76,6 +76,23 @@ export class Deplot {
 	}
 
 	/**
+	 * Checks if the window is currently running.
+	 * # Examples
+	 * - Get display state
+	 * ```ts
+	 * const plot1 = new Deplot('Plotly')
+	 * const plot2 = new Deplot('Plotly')
+	 * await plot1.plot(...)
+	 *
+	 * plot1.isShown //true
+	 * plot2.isShown //false
+	 * ```
+	 */
+	get isShown() {
+		return this.#window.isShown
+	}
+
+	/**
 	 * Plot the `Datas` corresponding to the plot engine and open or refresh the window.
 	 * @param {Datas} datas - Plot datas.
 	 */
