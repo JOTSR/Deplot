@@ -19,7 +19,7 @@ function editablePlot() {
 	const layout: Partial<Plotly.Layout> = {
 		title: 'Click Here<br>to Edit Chart Title',
 	}
-	const datas: Datas = { data, layout, config: { editable: true } }
+	const datas: Datas<'Plotly'> = { data, layout, config: { editable: true } }
 
 	new Deplot('Plotly', {
 		title: 'ChartJs line plot',
@@ -47,7 +47,7 @@ function barPlot() {
 		title: 'Hide the Modebar',
 		showlegend: true,
 	}
-	const datas: Datas = { data, layout, config: { editable: true } }
+	const datas: Datas<'Plotly'> = { data, layout, config: { editable: true } }
 
 	const deplot = new Deplot('Plotly', {
 		title: 'ChartJs line plot',

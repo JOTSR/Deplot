@@ -13,11 +13,11 @@ function fileHandler({ pathname }: URL) {
 	throw new Error(`uknown path ${pathname}`)
 }
 
-export class Deplot {
+export class Deplot<T extends PlotEngine> {
 	#plotEngine: PlotEngine
 	#options: RequiredDeplotOptions
 	#window: WebUI
-	#datas?: Datas
+	#datas?: Datas<T>
 	#html = bundle
 
 	/**
@@ -96,7 +96,7 @@ export class Deplot {
 	 * Plot the `Datas` corresponding to the plot engine and open or refresh the window.
 	 * @param {Datas} datas - Plot datas.
 	 */
-	async plot(datas: Datas) {
+	async plot(datas: Datas<T>) {
 		this.#datas = datas
 
 		await this.#window.show(this.#html)
@@ -116,7 +116,7 @@ export class Deplot {
 	 * Merge the actual datas with new datas and refresh the UI.
 	 * @param {Datas} datas - Datas to merge.
 	 */
-	update(datas: Datas) {
+	update(datas: Datas<T>) {
 		this.plot({ ...this.#datas, ...datas })
 	}
 

@@ -51,7 +51,7 @@ async function editablePlot() {
 	const layout: Partial<Plotly.Layout> = {
 		title: 'Click Here<br>to Edit Chart Title',
 	}
-	const datas: Datas = { data, layout, config: { editable: true } }
+	const datas: Datas<'Plotly'> = { data, layout, config: { editable: true } }
 
 	const plot = new Deplot('Plotly', {
 		title: 'Plotly editable plot',

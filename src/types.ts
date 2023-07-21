@@ -11,7 +11,8 @@ export type PlotlyDatas = {
 	config?: Partial<Plotly.Config>
 }
 
-export type Datas = ChartJsDatas | PlotlyDatas
+export type Datas<T extends PlotEngine> = T extends 'ChartJs' ? ChartJsDatas
+	: PlotlyDatas
 export type DeplotOptions = {
 	title?: string
 	size?: { width?: number; height?: number }
