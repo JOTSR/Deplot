@@ -27,10 +27,11 @@ export class Deplot {
 		this.#plotEngine = plotEngine
 		this.#window = new WebUI()
 		this.#window.setFileHandler(fileHandler)
-		this.#options = {
-			...{ title: 'Deplot', size: { width: 500, height: 500 } },
-			...options,
-		} as RequiredDeplotOptions
+
+		const size = { ...{ width: 500, height: 500 }, ...options.size }
+		const title = options.title ?? 'Deplot'
+		const closeCallback = options.closeCallback
+		this.#options = { title, size, closeCallback } as RequiredDeplotOptions
 	}
 
 	static wait() {
