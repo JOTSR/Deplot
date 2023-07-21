@@ -9,17 +9,16 @@ Simple and complete Plot gui module for [Deno](https://deno.land) local scripts
 to provide a helper for science computing.
 
 [![deno module](https://shield.deno.dev/x/deplot)](https://deno.land/x/deplot)
-![deno compatibility](https://shield.deno.dev/deno/^1.20)
+![deno compatibility](https://shield.deno.dev/deno/^1.30)
 [![vr scripts](https://badges.velociraptor.run/flat.svg)](https://velociraptor.run)
 [![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/deno.land/x/deplot/mod.ts)
 
 ## Dependencies
 
-Use [Webview](https://deno.land/x/webview@0.7.0-pre.1) for window managing and
+Use [WebUI](https://deno.land/x/webui) for window managing and
 plots libraries for tracing.
 
-**WARNING**: Still under active development, GChart is not supported,
-deplot.screenshot and deplot.update neither.
+Supports [Plotly.js](https://plotly.com/javascript/) and [Chart.js](https://www.chartjs.org/) for plotting.
 
 ## Usage
 
@@ -28,7 +27,13 @@ All the modules are exposed in `mod.ts`
 ```ts
 import { Datas, Deplot, Plotly } from 'https://deno.land/x/deplot/mod.ts'
 
-const deplot = new Deplot('Plotly')
+const barPlot = new Deplot(
+	'Plotly',
+	{
+		title: 'My bar plot',
+		size: { width: 800, height: 600 },
+	},
+)
 
 const trace: Plotly.Data = {
 	x: ['Zebras', 'Lions', 'Pelicans'],
@@ -44,7 +49,7 @@ const layout: Partial<Plotly.Layout> = {
 
 const datas: Datas = { data: [trace], layout, config: { editable: true } }
 
-deplot.plot(datas, { title: 'My plot', size: [800, 600] })
+await barPlot.plot(datas)
 
 const trace2: Plotly.Data = {
 	x: [1, 2, 3, 4, 5],
@@ -55,7 +60,7 @@ const trace2: Plotly.Data = {
 
 const datas2 = { data: [trace2], layout }
 
-deplot.plot(datas, { title: 'My second plot', size: [450, 450] })
+new Deplot('Plotly').plot(datas)
 ```
 
 [Documentation](https://doc.deno.land/https://deno.land/x/deplot/mod.ts)
@@ -65,11 +70,13 @@ deplot.plot(datas, { title: 'My second plot', size: [450, 450] })
 [Plotly.js](https://plotly.com/javascript/)
 
 ```sh
-deno run --allow-read --allow-write --allow-net --allow-run --allow-env --allow-ffi --unstable --no-check https://deno.land/x/deplot/examples/plotly.ts
+deno run --allow-read --allow-write --allow-env --allow-ffi --unstable https://deno.land/x/deplot/examples/plotly.ts
 ```
 
 [Chart.js](https://www.chartjs.org/docs/3.7.0/)
 
 ```sh
-deno run --allow-read --allow-write --allow-net --allow-run --allow-env --allow-ffi --unstable --no-check https://deno.land/x/deplot/examples/chartjs.ts
+deno run --allow-read --allow-write --allow-env --allow-ffi --unstable https://deno.land/x/deplot/examples/chartjs.ts
 ```
+
+_For flags see [Deno WebUI/Security flags](https://github.com/webui-dev/deno-webui/#security-flags)_
