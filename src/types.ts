@@ -12,7 +12,6 @@ export type PlotlyDatas = {
 }
 
 export type Datas = ChartJsDatas | PlotlyDatas
-export type Config = { title?: string; size: [number, number] }
 export type DeplotOptions = {
 	title?: string
 	size?: { width?: number; height?: number }

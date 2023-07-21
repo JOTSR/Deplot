@@ -79,7 +79,6 @@ export { Deplot } from './src/deplot.ts'
 
 export type {
 	ChartJs,
-	Config,
 	Datas,
 	DeplotOptions,
 	PlotEngine,
