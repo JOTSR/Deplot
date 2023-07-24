@@ -13,14 +13,14 @@ export type PlotlyDatas = {
 
 export type Datas<T extends PlotEngine> = T extends 'ChartJs' ? ChartJsDatas
 	: PlotlyDatas
+
 export type DeplotOptions = {
-	title?: string
-	size?: { width?: number; height?: number }
-	// closeCallback?: () => unknown
+	[P in keyof RequiredDeplotOptions]?: Partial<RequiredDeplotOptions[P]>
 }
 
 export type RequiredDeplotOptions = {
 	title: string
 	size: { width: number; height: number }
+	theme: 'auto' | 'light' | 'dark'
 	// closeCallback?: () => unknown
 }

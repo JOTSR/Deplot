@@ -56,8 +56,9 @@ export class Deplot<T extends PlotEngine> {
 
 		const size = { ...{ width: 500, height: 500 }, ...options?.size }
 		const title = options?.title ?? 'Deplot'
+		const theme = options?.theme ?? 'auto'
 		// const closeCallback = options.closeCallback
-		this.#options = { title, size } as RequiredDeplotOptions
+		this.#options = { title, size, theme } as RequiredDeplotOptions
 	}
 
 	/**
@@ -106,6 +107,7 @@ export class Deplot<T extends PlotEngine> {
 		//config window
 		await this.setSize(this.#options.size)
 		this.title = this.#options.title
+		this.theme = this.#options.theme
 
 		//update plot
 		this.#window.run(`DeplotClient.engine = "${this.#plotEngine}"`)
@@ -210,6 +212,36 @@ export class Deplot<T extends PlotEngine> {
 	get title() {
 		if (!this.#window.isShown) throw new Error('plot is not displayed')
 		return this.#options.title
+	}
+
+	/**
+	 * Theme used by the window and the plot.
+	 * # Usage
+	 * - No complex theme are provided,
+	 * use your own theme to full support non light theme.
+	 * - Custom theme will not be overwritten by `Deplot.theme`.
+	 * - `auto` will use `prefers-color-scheme` of user default navigator
+	 * to choose theme to use.
+	 * # Examples
+	 * - Set new theme
+	 * ```ts
+	 * const myPlot = new Deplot('ChartJs', { theme: 'auto' })
+	 *
+	 * myPlot.theme = 'dark'
+	 * ```
+	 * - Get current theme
+	 * ```ts
+	 * console.assert(myPlot.theme, 'dark')
+	 * ```
+	 */
+	set theme(theme: RequiredDeplotOptions['theme']) {
+		if (!this.#window.isShown) throw new Error('plot is not displayed')
+		this.#options.theme = theme
+		this.#window.run(`DeplotClient.theme = '${theme}'`)
+	}
+
+	get theme() {
+		return this.#options.theme
 	}
 
 	/**

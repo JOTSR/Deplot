@@ -133,6 +133,7 @@ function radarChart() {
 	new Deplot('ChartJs', {
 		title: 'ChartJs radar plot',
 		size: { width: 400 },
+		theme: 'dark',
 	}).plot(datas)
 }
 
@@ -160,6 +161,7 @@ function pieChart() {
 
 	new Deplot('ChartJs', {
 		title: 'ChartJs pie plot',
+		theme: 'light',
 	}).plot(datas)
 }
 

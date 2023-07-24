@@ -52,6 +52,7 @@ function barPlot() {
 	const deplot = new Deplot('Plotly', {
 		title: 'ChartJs line plot',
 		size: { width: 700 },
+		theme: 'auto',
 	})
 	deplot.plot(datas)
 

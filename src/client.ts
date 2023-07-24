@@ -1,23 +1,20 @@
 /// <reference lib="dom" />
 
-import type { webui } from 'https://raw.githubusercontent.com/webui-dev/webui/d169029523b57c4d14e478be8aea96c03a516aef/src/client/webui.ts'
 import * as ChartJs from 'https://cdn.skypack.dev/chart.js?dts'
+import type { webui } from 'https://raw.githubusercontent.com/webui-dev/webui/d169029523b57c4d14e478be8aea96c03a516aef/src/client/webui.ts'
 import type * as PlotlyJs from '../vendor/Plotly/index.d.ts'
 import type {
 	ChartJsDatas,
-	Config,
 	Datas,
 	PlotEngine,
 	PlotlyDatas,
+	RequiredDeplotOptions,
 } from './types.ts'
 
 declare global {
 	const Plotly: typeof PlotlyJs
 	const webui: webui
-	const DeplotClient: {
-		plot: (datas: Datas, config: Config) => void
-		engine: PlotEngine
-	}
+	const DeplotClient: DeplotClient
 }
 
 export class DeplotClient {
@@ -27,6 +24,7 @@ export class DeplotClient {
 
 	static engine: PlotEngine
 	static #chartjsChart: ChartJs.Chart
+	static #plotlyLayout: Partial<PlotlyJs.Layout>
 	static get canvas() {
 		return document.querySelector<HTMLCanvasElement>('#plot')!
 	}
@@ -35,6 +33,43 @@ export class DeplotClient {
 
 	static set title(title: string) {
 		document.title = title
+	}
+
+	static set theme(theme: RequiredDeplotOptions['theme']) {
+		if (theme === 'auto') {
+			if (globalThis.matchMedia('(prefers-color-scheme: dark)').matches) {
+				this.theme = 'dark'
+			} else {
+				this.theme = 'light'
+			}
+		}
+		if (theme === 'light') {
+			document.body.classList.remove('theme-dark')
+			document.body.classList.add('theme-light')
+			if (DeplotClient.engine === 'Plotly') {
+				Plotly.relayout(
+					DeplotClient.canvas.parentElement!,
+					setTheme(theme, this.#plotlyLayout),
+				)
+				return
+			}
+		}
+		if (theme === 'dark') {
+			document.body.classList.remove('theme-light')
+			document.body.classList.add('theme-dark')
+			if (DeplotClient.engine === 'Plotly') {
+				Plotly.relayout(
+					DeplotClient.canvas.parentElement!,
+					setTheme(theme, this.#plotlyLayout),
+				)
+				return
+			}
+		}
+	}
+
+	static get theme(): Exclude<RequiredDeplotOptions['theme'], 'auto'> {
+		//@ts-ignore values is on classList
+		return Array.from(document.body.classList.values())[0].slice(6)
 	}
 
 	static set size({ width, height }: { width?: number; height?: number }) {
@@ -54,7 +89,7 @@ export class DeplotClient {
 		globalThis.moveTo(x, y)
 	}
 
-	static plot(datas: Datas) {
+	static plot<T extends PlotEngine>(datas: Datas<T>) {
 		if (this.engine === 'ChartJs') {
 			this.canvas.style.display = 'block'
 			const registerables = []
@@ -79,6 +114,9 @@ export class DeplotClient {
 		if (this.engine === 'Plotly') {
 			this.canvas.style.display = 'none'
 			const { data, layout, config } = datas as PlotlyDatas
+
+			this.#plotlyLayout = setTheme(this.theme, layout)
+
 			Plotly.newPlot(
 				this.canvas.parentElement!,
 				data,
@@ -131,3 +169,32 @@ addEventListener('resize', () => {
 	DeplotClient.canvas.setAttribute('width', String(window.innerWidth))
 	DeplotClient.canvas.setAttribute('height', String(window.innerHeight))
 })
+
+/**
+ * Sets the theme of a Plotly chart to either 'dark' or 'light' and updates the
+ * layout accordingly.
+ * @param theme - Desired theme for the plot.
+ * @param {Partial<PlotlyJs.Layout>|undefined} layout - Plotly layout.
+ */
+function setTheme(
+	theme: typeof DeplotClient['theme'],
+	layout?: Partial<PlotlyJs.Layout>,
+) {
+	const bgColor = globalThis.getComputedStyle(document.body).backgroundColor
+	const ftColor = globalThis.getComputedStyle(document.body).color
+
+	if (layout === undefined) layout = {}
+
+	if (theme === 'dark') {
+		if (!('plot_bgcolor' in layout)) {
+			layout.plot_bgcolor = bgColor
+		}
+		if (!('paper_bgcolor' in layout)) {
+			layout.paper_bgcolor = bgColor
+		}
+		if (!('font' in layout)) {
+			layout.font = { ...{ color: ftColor }, ...layout.font }
+		}
+	}
+	return layout
+}

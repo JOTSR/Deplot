@@ -50,133 +50,26 @@
     "https://deno.land/x/ensure_version@1.3.0/deps.ts": "5b10b6353b88a17c1e2d9e5a84a3719c8bae3f723b58f672d8ab8a353d1bdfe2",
     "https://deno.land/x/ensure_version@1.3.0/ensure_version.ts": "3ae9770b544d8aede6cf0f650134e754e1d4b595eeae1b7b1f3d761ae371265c",
     "https://deno.land/x/ensure_version@1.3.0/mod.ts": "5007ec41b0dec14de386dd2e33eb46971819015b46c2559f59bec46103b028ec",
-    "https://deno.land/x/esbuild@v0.15.16/mod.js": "ea6e965ce00e183774d9e64ed6910ab8cc6d33717a295ab22a510f0f8ce8ae27",
+    "https://deno.land/x/esbuild@v0.18.15/mod.js": "d04989dd0d71d839175eeb96df96ea04a26d6b5f41cd9ab1e5170e047db20251",
     "https://deno.land/x/esbuild_plugin_http_fetch@v1.0.3/index.js": "e4c54ff2747437390dbc1819fe10d38f6497fb1552a3e54a5f90c0b6d88ecfce",
-    "https://ejm.sh/deno.land/x/webui@2.3.0/src/webui-2-x64.dyn": "a0b1527c6b7ca91c780a3ed2c54d8702d854df65cbb68ce7c24d6fea28c7ad12",
-    "https://ejm.sh/https://raw.githubusercontent.com/denoland/deno/main/Releases.md": "e735a244c443d3d3e25b79ed8a04c7486be665ee2d9f8cc9ebdf3302e65e97bc",
-    "https://ejm.sh/raw.githubusercontent.com/webui-dev/deno-webui/2930d88868a629ecc07d48320489fa0dc1b7fe1d/src/webui-2-x64.dll": "bdcdd89f0fc302fe85b4a6618d6d3573229e3805fcca57a3e7a6d87b0d93eafe",
-    "https://ejm.sh/raw.githubusercontent.com/webui-dev/deno-webui/2930d88868a629ecc07d48320489fa0dc1b7fe1d/src/webui-2-x64.so": "8044510dfc69504b20cab780053088c89768b4f3a05091bd1feab37620fb73f3",
+    "https://ejm.sh/https://raw.githubusercontent.com/denoland/deno/main/Releases.md": "d8c1f7234d6e87ea5ab42d2e328c7f8fdd0c0f35c805a97e7ee6927f05a7efd1",
     "https://ejm.sh/raw.githubusercontent.com/webui-dev/deno-webui/6fa36e7c15b6ea643e52d9edfcd2fac102d313ce/src/webui-2-x64.dll": "7d67049cad3c2316e1549d38fb63b28b08f1fbe9b4cb7c04f2ce82ec3f0f8cf0",
     "https://ejm.sh/raw.githubusercontent.com/webui-dev/deno-webui/6fa36e7c15b6ea643e52d9edfcd2fac102d313ce/src/webui-2-x64.dyn": "27b93b0db4139747f42b28dfb99793bc74af19de937851ea3e0256d941327326",
     "https://ejm.sh/raw.githubusercontent.com/webui-dev/deno-webui/6fa36e7c15b6ea643e52d9edfcd2fac102d313ce/src/webui-2-x64.so": "64b02a1a49c2138a73b46ba351c56872036b22a2af9f73fd7cd427aa7898aebb",
-    "https://raw.githubusercontent.com/webui-dev/deno-webui/31ab162fc7bb4dc7b7bb9e6374aea2e742696e35/deps.ts": "785ab89cc04ebca614cb89c62967f72981db66f40bb053c0f1927112484b6a8b",
-    "https://raw.githubusercontent.com/webui-dev/deno-webui/31ab162fc7bb4dc7b7bb9e6374aea2e742696e35/mod.ts": "27907c7a9104ae800b10112ee411cc89e4c6bb72ccb6dd43a114fe2f1b4a6d9e",
-    "https://raw.githubusercontent.com/webui-dev/deno-webui/31ab162fc7bb4dc7b7bb9e6374aea2e742696e35/src/lib.ts": "88a581e417f8d31824cd7f0f7789d5cf26b4831415a374788025824ec2a9c511",
-    "https://raw.githubusercontent.com/webui-dev/deno-webui/31ab162fc7bb4dc7b7bb9e6374aea2e742696e35/src/types.ts": "bd1238c9390f106439c382f4e8649ee0826d2311014d73c5deda5a5ed57ec31c",
-    "https://raw.githubusercontent.com/webui-dev/deno-webui/31ab162fc7bb4dc7b7bb9e6374aea2e742696e35/src/utils.ts": "3c0e3f6cabf37331202cca0707cf78a23ce4ff8e48270eb386f357f206116fd9",
-    "https://raw.githubusercontent.com/webui-dev/deno-webui/31ab162fc7bb4dc7b7bb9e6374aea2e742696e35/src/webui.ts": "fd924b48df060e108b61d71ba58efa98dbc8ef07dd12e52bb2c373b8e3071849",
     "https://raw.githubusercontent.com/webui-dev/deno-webui/3ba9bbc9ffd9de870a12b946a7515fa7ede7d38e/deps.ts": "785ab89cc04ebca614cb89c62967f72981db66f40bb053c0f1927112484b6a8b",
     "https://raw.githubusercontent.com/webui-dev/deno-webui/3ba9bbc9ffd9de870a12b946a7515fa7ede7d38e/mod.ts": "27907c7a9104ae800b10112ee411cc89e4c6bb72ccb6dd43a114fe2f1b4a6d9e",
     "https://raw.githubusercontent.com/webui-dev/deno-webui/3ba9bbc9ffd9de870a12b946a7515fa7ede7d38e/src/lib.ts": "88a581e417f8d31824cd7f0f7789d5cf26b4831415a374788025824ec2a9c511",
     "https://raw.githubusercontent.com/webui-dev/deno-webui/3ba9bbc9ffd9de870a12b946a7515fa7ede7d38e/src/types.ts": "bd1238c9390f106439c382f4e8649ee0826d2311014d73c5deda5a5ed57ec31c",
     "https://raw.githubusercontent.com/webui-dev/deno-webui/3ba9bbc9ffd9de870a12b946a7515fa7ede7d38e/src/utils.ts": "3c0e3f6cabf37331202cca0707cf78a23ce4ff8e48270eb386f357f206116fd9",
-    "https://raw.githubusercontent.com/webui-dev/deno-webui/3ba9bbc9ffd9de870a12b946a7515fa7ede7d38e/src/webui.ts": "d2de9512d86094a50a7f357a4221feda2211de29720b40490dc0233dabf185df",
-    "https://raw.githubusercontent.com/webui-dev/deno-webui/60b5e7bd89022889c0635e34ba37cc46ad41af70/deps.ts": "c72bea601e84f1803ee41a3ccb1a5c80fe2798bfb7f5c842fa3d224a6a0670be",
-    "https://raw.githubusercontent.com/webui-dev/deno-webui/60b5e7bd89022889c0635e34ba37cc46ad41af70/mod.ts": "27907c7a9104ae800b10112ee411cc89e4c6bb72ccb6dd43a114fe2f1b4a6d9e",
-    "https://raw.githubusercontent.com/webui-dev/deno-webui/60b5e7bd89022889c0635e34ba37cc46ad41af70/src/lib.ts": "88a581e417f8d31824cd7f0f7789d5cf26b4831415a374788025824ec2a9c511",
-    "https://raw.githubusercontent.com/webui-dev/deno-webui/60b5e7bd89022889c0635e34ba37cc46ad41af70/src/types.ts": "bd1238c9390f106439c382f4e8649ee0826d2311014d73c5deda5a5ed57ec31c",
-    "https://raw.githubusercontent.com/webui-dev/deno-webui/60b5e7bd89022889c0635e34ba37cc46ad41af70/src/utils.ts": "3c0e3f6cabf37331202cca0707cf78a23ce4ff8e48270eb386f357f206116fd9",
-    "https://raw.githubusercontent.com/webui-dev/deno-webui/60b5e7bd89022889c0635e34ba37cc46ad41af70/src/webui.ts": "0c2dc0097d659e3dfde4f20f3c31f04e37768f927b7e7f6665fbc45848f20d4e",
-    "https://raw.githubusercontent.com/webui-dev/deno-webui/d2442ae3e3d79e87842d8bda8c874826e8eeed69/deps.ts": "785ab89cc04ebca614cb89c62967f72981db66f40bb053c0f1927112484b6a8b",
-    "https://raw.githubusercontent.com/webui-dev/deno-webui/d2442ae3e3d79e87842d8bda8c874826e8eeed69/mod.ts": "27907c7a9104ae800b10112ee411cc89e4c6bb72ccb6dd43a114fe2f1b4a6d9e",
-    "https://raw.githubusercontent.com/webui-dev/deno-webui/d2442ae3e3d79e87842d8bda8c874826e8eeed69/src/lib.ts": "88a581e417f8d31824cd7f0f7789d5cf26b4831415a374788025824ec2a9c511",
-    "https://raw.githubusercontent.com/webui-dev/deno-webui/d2442ae3e3d79e87842d8bda8c874826e8eeed69/src/types.ts": "bd1238c9390f106439c382f4e8649ee0826d2311014d73c5deda5a5ed57ec31c",
-    "https://raw.githubusercontent.com/webui-dev/deno-webui/d2442ae3e3d79e87842d8bda8c874826e8eeed69/src/utils.ts": "3c0e3f6cabf37331202cca0707cf78a23ce4ff8e48270eb386f357f206116fd9",
-    "https://raw.githubusercontent.com/webui-dev/deno-webui/d2442ae3e3d79e87842d8bda8c874826e8eeed69/src/webui.ts": "df383fd92ee5c229cc176a914ffbda9681e41cc231be9166c9c83c8dfa26c4e1"
+    "https://raw.githubusercontent.com/webui-dev/deno-webui/3ba9bbc9ffd9de870a12b946a7515fa7ede7d38e/src/webui.ts": "d2de9512d86094a50a7f357a4221feda2211de29720b40490dc0233dabf185df"
   },
   "npm": {
     "specifiers": {
-      "auto-changelog": "auto-changelog@2.4.0",
       "crc-32@1.2.2": "crc-32@1.2.2"
     },
     "packages": {
-      "auto-changelog@2.4.0": {
-        "integrity": "sha512-vh17hko1c0ItsEcw6m7qPRf3m45u+XK5QyCrrBFViElZ8jnKrPC1roSznrd1fIB/0vR/zawdECCRJtTuqIXaJw==",
-        "dependencies": {
-          "commander": "commander@7.2.0",
-          "handlebars": "handlebars@4.7.7",
-          "node-fetch": "node-fetch@2.6.11",
-          "parse-github-url": "parse-github-url@1.0.2",
-          "semver": "semver@7.5.3"
-        }
-      },
-      "commander@7.2.0": {
-        "integrity": "sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==",
-        "dependencies": {}
-      },
       "crc-32@1.2.2": {
         "integrity": "sha512-ROmzCKrTnOwybPcJApAA6WBWij23HVfGVNKqqrZpuyZOHqK2CwHSvpGuyt/UNNvaIjEd8X5IFGp4Mh+Ie1IHJQ==",
-        "dependencies": {}
-      },
-      "handlebars@4.7.7": {
-        "integrity": "sha512-aAcXm5OAfE/8IXkcZvCepKU3VzW1/39Fb5ZuqMtgI/hT8X2YgoMvBY5dLhq/cpOvw7Lk1nK/UF71aLG/ZnVYRA==",
-        "dependencies": {
-          "minimist": "minimist@1.2.8",
-          "neo-async": "neo-async@2.6.2",
-          "source-map": "source-map@0.6.1",
-          "uglify-js": "uglify-js@3.17.4",
-          "wordwrap": "wordwrap@1.0.0"
-        }
-      },
-      "lru-cache@6.0.0": {
-        "integrity": "sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==",
-        "dependencies": {
-          "yallist": "yallist@4.0.0"
-        }
-      },
-      "minimist@1.2.8": {
-        "integrity": "sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==",
-        "dependencies": {}
-      },
-      "neo-async@2.6.2": {
-        "integrity": "sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==",
-        "dependencies": {}
-      },
-      "node-fetch@2.6.11": {
-        "integrity": "sha512-4I6pdBY1EthSqDmJkiNk3JIT8cswwR9nfeW/cPdUagJYEQG7R95WRH74wpz7ma8Gh/9dI9FP+OU+0E4FvtA55w==",
-        "dependencies": {
-          "whatwg-url": "whatwg-url@5.0.0"
-        }
-      },
-      "parse-github-url@1.0.2": {
-        "integrity": "sha512-kgBf6avCbO3Cn6+RnzRGLkUsv4ZVqv/VfAYkRsyBcgkshNvVBkRn1FEZcW0Jb+npXQWm2vHPnnOqFteZxRRGNw==",
-        "dependencies": {}
-      },
-      "semver@7.5.3": {
-        "integrity": "sha512-QBlUtyVk/5EeHbi7X0fw6liDZc7BBmEaSYn01fMU1OUYbf6GPsbTtd8WmnqbI20SeycoHSeiybkE/q1Q+qlThQ==",
-        "dependencies": {
-          "lru-cache": "lru-cache@6.0.0"
-        }
-      },
-      "source-map@0.6.1": {
-        "integrity": "sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==",
-        "dependencies": {}
-      },
-      "tr46@0.0.3": {
-        "integrity": "sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==",
-        "dependencies": {}
-      },
-      "uglify-js@3.17.4": {
-        "integrity": "sha512-T9q82TJI9e/C1TAxYvfb16xO120tMVFZrGA3f9/P4424DNu6ypK103y0GPFVa17yotwSyZW5iYXgjYHkGrJW/g==",
-        "dependencies": {}
-      },
-      "webidl-conversions@3.0.1": {
-        "integrity": "sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==",
-        "dependencies": {}
-      },
-      "whatwg-url@5.0.0": {
-        "integrity": "sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==",
-        "dependencies": {
-          "tr46": "tr46@0.0.3",
-          "webidl-conversions": "webidl-conversions@3.0.1"
-        }
-      },
-      "wordwrap@1.0.0": {
-        "integrity": "sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q==",
-        "dependencies": {}
-      },
-      "yallist@4.0.0": {
-        "integrity": "sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==",
         "dependencies": {}
       }
     }
